@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Warna disimpan sebagai channel "R G B" supaya modifier opacity Tailwind bekerja. */
+:root {
+  --bg: 255 245 248;
+  --card: 255 255 255;
+  --ink: 74 29 47;
+  --ink-soft: 133 80 103;
+  --brand: 255 79 139;
+  --brand-deep: 201 47 101;
+  --brand-hover: 178 42 89;
+  --on-brand: 255 255 255;
+  --soft: 255 214 229;
+  --softer: 251 227 236;
+  --line: 240 212 223;
+  --income: 47 163 107;
+  --income-ink: 23 128 76;
+  --expense: 229 72 77;
+  --expense-ink: 196 43 48;
+  --focus: 201 47 101;
+  --grad-start: #d0346d;
+  --grad-end: #b5285b;
+  --scrim: rgba(45, 15, 26, 0.46);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: 28 14 20;
+    --card: 42 22 32;
+    --ink: 251 234 241;
+    --ink-soft: 205 167 184;
+    --brand: 255 122 168;
+    --brand-deep: 201 47 101;
+    --brand-hover: 216 75 128;
+    --on-brand: 255 255 255;
+    --soft: 58 34 48;
+    --softer: 69 41 58;
+    --line: 62 36 52;
+    --income: 63 191 130;
+    --income-ink: 79 213 152;
+    --expense: 255 107 111;
+    --expense-ink: 255 138 141;
+    --focus: 255 122 168;
+    --grad-start: #7a2a4d;
+    --grad-end: #4e1a33;
+    --scrim: rgba(0, 0, 0, 0.6);
+    color-scheme: dark;
+  }
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: rgb(var(--bg));
+  color: rgb(var(--ink));
+  font-family: 'Plus Jakarta Sans Variable', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overscroll-behavior-y: none;
+}
+
+.font-display {
+  font-family: 'Fraunces Variable', Georgia, serif;
+  font-optical-sizing: auto;
+}
+
+/* Keyboard focus stays visible everywhere (R-32). */
+:focus-visible {
+  outline: 2px solid rgb(var(--focus));
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+/* The soft pink gradient belongs only to the header and the main balance card. */
+.grad-brand {
+  background-image: linear-gradient(140deg, var(--grad-start), var(--grad-end));
+}
+
+.bg-scrim {
+  background-color: var(--scrim);
+}
+
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

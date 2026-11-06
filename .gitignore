@@ -1,0 +1,15 @@
+node_modules
+dist
+dist-ssr
+*.local
+.DS_Store
+.vite
+
+# editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+.vercel
+
+# reference material, not part of the app
+*.jpeg
