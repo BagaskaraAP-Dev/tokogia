@@ -10,17 +10,19 @@ import type { JenisTransaksi, Kategori, Transaksi } from '../../types';
 
 export function TransactionForm({
   transaksi,
+  jenisDefault = 'masuk',
   kategori,
   onSelesai,
 }: {
   transaksi: Transaksi | null;
+  jenisDefault?: JenisTransaksi;
   kategori: Kategori[];
   onSelesai: () => void;
 }) {
   const sedangEdit = transaksi !== null;
   const hapus = useHapusTransaksi();
 
-  const [jenis, setJenis] = useState<JenisTransaksi>(transaksi?.jenis ?? 'masuk');
+  const [jenis, setJenis] = useState<JenisTransaksi>(transaksi?.jenis ?? jenisDefault);
   const [nominalDigit, setNominalDigit] = useState(transaksi ? String(transaksi.nominal) : '');
   const [keterangan, setKeterangan] = useState(transaksi?.keterangan ?? '');
   const [kategoriTerpilih, setKategoriTerpilih] = useState<string | undefined>(transaksi?.kategori);

@@ -63,6 +63,7 @@ export function BerandaPage() {
       <TransaksiSheet
         buka={sheet.buka}
         transaksi={sheet.transaksi}
+        jenisDefault={sheet.jenisDefault}
         kategori={kategori}
         onTutup={sheet.tutup}
       />

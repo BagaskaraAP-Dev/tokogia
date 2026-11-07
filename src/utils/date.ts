@@ -138,14 +138,19 @@ export function keInputDatetimeLocal(epochMs: number): string {
 
 /** Tengah malam WIB dari nilai <input type="date"> ("YYYY-MM-DD"). */
 export function awalHariDariInputTanggal(nilai: string): number {
+  if (!nilai) return Date.now();
   const [tahun, bulan, hari] = nilai.split('-').map(Number);
+  if (isNaN(tahun) || isNaN(bulan) || isNaN(hari)) return Date.now();
   return Date.UTC(tahun, bulan - 1, hari) - WIB_OFFSET_MS;
 }
 
 /** Baca nilai datetime-local (jam dinding WIB) kembali ke epoch UTC. */
 export function dariInputDatetimeLocal(nilai: string): number {
+  if (!nilai) return Date.now();
   const [tanggal, waktu] = nilai.split('T');
+  if (!tanggal) return Date.now();
   const [tahun, bulan, hari] = tanggal.split('-').map(Number);
-  const [jam, menit] = waktu.split(':').map(Number);
-  return Date.UTC(tahun, bulan - 1, hari, jam, menit) - WIB_OFFSET_MS;
+  const [jam, menit] = (waktu || '00:00').split(':').map(Number);
+  if (isNaN(tahun) || isNaN(bulan) || isNaN(hari)) return Date.now();
+  return Date.UTC(tahun, bulan - 1, hari, isNaN(jam) ? 0 : jam, isNaN(menit) ? 0 : menit) - WIB_OFFSET_MS;
 }
