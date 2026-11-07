@@ -1,5 +1,4 @@
 import { useObjectUrl } from '../../hooks/useObjectUrl';
-import { WhiskMark } from '../ui/Logo';
 import type { Resep } from '../../types';
 
 export function RecipeCard({ resep, onClick }: { resep: Resep; onClick: () => void }) {
@@ -21,8 +20,12 @@ export function RecipeCard({ resep, onClick }: { resep: Resep; onClick: () => vo
             className="h-full w-full object-cover"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-brand-deep/55">
-            <WhiskMark className="h-10 w-10" />
+          <div className="flex h-full w-full items-center justify-center bg-brand/5">
+            <img
+              src="/logo-giaa.png"
+              alt="Logo Gia's Patisserie"
+              className="h-14 w-14 rounded-full object-cover opacity-60 shadow-sm ring-2 ring-white/90"
+            />
           </div>
         )}
       </div>

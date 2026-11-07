@@ -5,7 +5,7 @@ import { BottomSheet } from './ui/BottomSheet';
 const langkah: { icon: LucideIcon; teks: string }[] = [
   { icon: Share, teks: 'Ketuk tombol Bagikan (kotak dengan panah ke atas) di bar Safari.' },
   { icon: SquarePlus, teks: 'Gulir dan pilih "Tambahkan ke Layar Utama".' },
-  { icon: Check, teks: 'Ketuk "Tambah". Ikon Giaa Patisserie muncul di Home Screen.' },
+  { icon: Check, teks: 'Ketuk "Tambah". Ikon Gia\'s Patisserie muncul di Home Screen.' },
 ];
 
 export function OnboardingTip({ open, onTutup }: { open: boolean; onTutup: () => void }) {
