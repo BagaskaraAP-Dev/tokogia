@@ -8,7 +8,14 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['icon.svg', 'apple-touch-icon.png'],
+      includeAssets: [
+        'favicon.ico',
+        'favicon-32x32.png',
+        'favicon-16x16.png',
+        'icon.svg',
+        'apple-touch-icon.png',
+        'logo-giaa.png',
+      ],
       manifest: {
         id: '/',
         name: 'Catatan Keuangan · Giaa Patisserie',
