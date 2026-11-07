@@ -10,6 +10,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icon.svg', 'apple-touch-icon.png'],
       manifest: {
+        id: '/',
         name: 'Catatan Keuangan · Giaa Patisserie',
         short_name: 'Giaa Patisserie',
         description: 'Catat keuangan harian dan simpan resep toko kue Giaa Patisserie.',

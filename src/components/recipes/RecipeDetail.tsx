@@ -3,6 +3,7 @@ import { ChevronLeft, Pencil, Trash2 } from 'lucide-react';
 import { cn } from '../../utils/cn';
 import { formatRupiah } from '../../utils/currency';
 import { useObjectUrl } from '../../hooks/useObjectUrl';
+import { useOverlayDismiss } from '../../hooks/useOverlayDismiss';
 import { useWakeLock } from '../../hooks/useWakeLock';
 import type { Resep } from '../../types';
 
@@ -38,6 +39,7 @@ export function RecipeDetail({
   const [tercentang, setTercentang] = useState<Set<number>>(new Set());
   const [jagaLayar, setJagaLayar] = useState(true);
   useWakeLock(jagaLayar);
+  useOverlayDismiss(onKembali);
 
   const adaUntung = resep.modalBahan !== undefined && resep.hargaJual !== undefined;
 

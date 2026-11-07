@@ -29,7 +29,7 @@ export function WhiskMark({ className, title }: { className?: string; title?: st
  * Wordmark untuk header. Mewarisi warna teks dari induknya, jadi di header
  * gradasi cukup bungkus dengan teks putih.
  */
-export function Logo({ subtitle = true, className }: { subtitle?: boolean; className?: string }) {
+export function Logo({ className }: { className?: string }) {
   return (
     <div className={cn('flex items-center gap-3', className)}>
       <img
@@ -37,13 +37,8 @@ export function Logo({ subtitle = true, className }: { subtitle?: boolean; class
         alt="Logo Giaa Patisserie"
         className="h-11 w-11 shrink-0 rounded-full object-cover ring-2 ring-white/70"
       />
-      <div className="leading-none">
-        <div className="font-display text-xl font-semibold tracking-tight">Giaa Patisserie</div>
-        {subtitle && (
-          <div className="mt-1 text-[11px] font-semibold uppercase tracking-[0.12em]">
-            Catatan Keuangan
-          </div>
-        )}
+      <div className="font-display text-xl font-semibold leading-tight tracking-tight">
+        Catatan Keuangan
       </div>
     </div>
   );

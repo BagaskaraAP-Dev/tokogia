@@ -13,3 +13,5 @@ dist-ssr
 
 # reference material, not part of the app
 *.jpeg
+
+.vercel

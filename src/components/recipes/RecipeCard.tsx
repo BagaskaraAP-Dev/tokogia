@@ -13,7 +13,13 @@ export function RecipeCard({ resep, onClick }: { resep: Resep; onClick: () => vo
     >
       <div className="aspect-[4/3] w-full overflow-hidden bg-softer">
         {url ? (
-          <img src={url} alt={`Foto ${resep.nama}`} className="h-full w-full object-cover" />
+          <img
+            src={url}
+            alt={`Foto ${resep.nama}`}
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover"
+          />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-brand-deep/55">
             <WhiskMark className="h-10 w-10" />

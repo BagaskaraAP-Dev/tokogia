@@ -6,6 +6,7 @@ import { kompresGambar } from '../../utils/image';
 import { simpanResep } from '../../db/db';
 import { buatId } from '../../utils/id';
 import { useObjectUrl } from '../../hooks/useObjectUrl';
+import { useOverlayDismiss } from '../../hooks/useOverlayDismiss';
 import { useToast } from '../ui/Toast';
 import type { Bahan, Resep } from '../../types';
 
@@ -19,6 +20,7 @@ export function RecipeForm({ resep, onSelesai }: { resep: Resep | null; onSelesa
   const tampilkanToast = useToast();
   const inputFoto = useRef<HTMLInputElement>(null);
   const sedangEdit = resep !== null;
+  useOverlayDismiss(onSelesai);
 
   const [nama, setNama] = useState(resep?.nama ?? '');
   const [kategori, setKategori] = useState(resep?.kategori ?? 'Kue');
