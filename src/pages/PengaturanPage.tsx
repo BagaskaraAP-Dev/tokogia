@@ -82,14 +82,16 @@ export function PengaturanPage() {
       <PageHeader title="Pengaturan" />
 
       <div className="mx-auto w-full max-w-md space-y-4 px-4 py-5">
-        <div className="flex items-center gap-3 rounded-3xl bg-card p-4 shadow-card">
-          <img
-            src="/logo-giaa.png"
-            alt="Logo Giaa Patisserie"
-            className="h-12 w-12 shrink-0 rounded-full object-cover"
-          />
+        <div className="flex items-center gap-3.5 rounded-3xl bg-card p-4 shadow-card">
+          <div className="relative shrink-0 rounded-full bg-white p-0.5 shadow-sm ring-2 ring-brand-deep/20">
+            <img
+              src="/logo-giaa.png"
+              alt="Logo Gia's Patisserie"
+              className="h-14 w-14 rounded-full object-cover"
+            />
+          </div>
           <div>
-            <p className="font-display text-base font-semibold text-ink">Giaa Patisserie</p>
+            <p className="font-display text-lg font-semibold text-ink">Gia's Patisserie</p>
             <p className="text-sm text-ink-soft">Catatan Keuangan · versi 1.0</p>
           </div>
         </div>
