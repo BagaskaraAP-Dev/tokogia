@@ -14,9 +14,9 @@ export function TabBar({ active, onChange }: { active: TabId; onChange: (id: Tab
   return (
     <nav
       aria-label="Navigasi utama"
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-[#2d1222] bg-[#140812]/95 pb-safe backdrop-blur-md"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-[#2a0e20] bg-[#120610]/95 pb-safe backdrop-blur-md"
     >
-      <ul className="mx-auto flex w-full max-w-md px-2 py-1.5">
+      <ul className="mx-auto flex w-full max-w-md px-3 py-1.5">
         {tabs.map(({ id, label, icon: Icon }) => {
           const selected = id === active;
           return (
@@ -26,13 +26,13 @@ export function TabBar({ active, onChange }: { active: TabId; onChange: (id: Tab
                 onClick={() => onChange(id)}
                 aria-current={selected ? 'page' : undefined}
                 className={cn(
-                  'flex min-h-[3.25rem] w-full flex-col items-center justify-center gap-1 rounded-2xl py-1.5 transition-all',
+                  'flex min-h-[3.25rem] w-full flex-col items-center justify-center gap-1 rounded-2xl py-1 transition-all',
                   selected
-                    ? 'bg-[#351426] text-[#f472b6] font-bold shadow-sm'
-                    : 'text-[#9f7287] hover:text-[#e4a8c1]',
+                    ? 'bg-[#331224] text-[#f472b6] font-bold shadow-sm'
+                    : 'text-[#8e687c] hover:text-[#d4a5b8]',
                 )}
               >
-                <Icon size={20} strokeWidth={selected ? 2.4 : 1.8} aria-hidden="true" />
+                <Icon size={20} strokeWidth={selected ? 2.2 : 1.8} aria-hidden="true" />
                 <span className="text-[11px] font-semibold tracking-tight">{label}</span>
               </button>
             </li>

@@ -19,22 +19,13 @@ function sudahStandalone(): boolean {
 }
 
 export function App() {
-  const [tab, setTab] = useState<TabId>('beranda');
+  const [tab, setTab] = useState<TabId>('riwayat');
   const [tipTerbuka, setTipTerbuka] = useState(false);
 
   useEffect(() => {
     void pastikanSeed().then(() => {
       void jalankanSinkronisasiAwal();
     });
-  }, []);
-
-  useEffect(() => {
-    try {
-      const sudahDilihat = localStorage.getItem(KUNCI_ONBOARDING) === '1';
-      if (!sudahDilihat && !sudahStandalone()) setTipTerbuka(true);
-    } catch {
-      // localStorage bisa diblokir; lewati tip saja.
-    }
   }, []);
 
   function tutupTip() {
@@ -48,8 +39,8 @@ export function App() {
 
   return (
     <ToastProvider>
-      <div className="min-h-dvh bg-bg text-ink">
-        <main className="mx-auto w-full max-w-md pb-[calc(4.25rem_+_env(safe-area-inset-bottom))]">
+      <div className="min-h-dvh bg-[#120811] text-white selection:bg-[#d0346d] selection:text-white">
+        <main className="mx-auto w-full max-w-md bg-[#120811] pb-[calc(4.25rem_+_env(safe-area-inset-bottom))]">
           {tab === 'beranda' && <BerandaPage />}
           {tab === 'riwayat' && <RiwayatPage />}
           {tab === 'resep' && <ResepPage />}

@@ -76,42 +76,46 @@ function hitungRentangWaktu(
 
 /**
  * Ilustrasi Resi Struk Khas Gia's Patisserie
- * Meniru persis grafik lingkaran bercahaya dengan kertas struk pink bergerigi di contoh.webp
+ * Meniru persis medali lingkaran burgundy dengan kertas struk bergelombang dan kilauan sinar di contoh.webp
  */
 function IlustrasiResiStruk() {
   return (
-    <div className="relative mx-auto flex h-32 w-32 items-center justify-center">
-      {/* Kilauan / Sparkle di kanan atas */}
+    <div className="relative mx-auto mt-2 flex h-28 w-28 items-center justify-center">
+      {/* 3 kilauan sinar di kanan atas persis contoh.webp (\ | /) */}
       <svg
-        className="absolute -right-1 top-1 h-6 w-6 text-[#f472b6]"
+        className="absolute -right-0.5 top-1 h-5 w-5 text-white/90"
         viewBox="0 0 24 24"
-        fill="currentColor"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+        strokeLinecap="round"
         aria-hidden="true"
       >
-        <path d="M12 0L14 9L23 11L14 13L12 22L10 13L1 11L10 9L12 0Z" opacity="0.85" />
-        <path d="M20 16L21 19L24 20L21 21L20 24L19 21L16 20L19 19L20 16Z" opacity="0.65" />
+        <line x1="12" y1="5" x2="12" y2="1" />
+        <line x1="18" y1="8" x2="22" y2="4" />
+        <line x1="6" y1="8" x2="2" y2="4" />
       </svg>
 
-      {/* Latar belakang lingkaran gelap bercahaya lembut */}
-      <div className="flex h-28 w-28 items-center justify-center rounded-full border border-[#521b3a]/50 bg-gradient-to-b from-[#3a1329] to-[#1c0816] shadow-inner shadow-[#5c1a3e]/40">
-        {/* Kertas Resi Struk Pink */}
-        <div className="relative w-14 rounded-t-xl bg-gradient-to-b from-[#f472b6] to-[#db2777] p-2.5 shadow-md">
-          {/* Garis-garis putih di dalam struk */}
-          <div className="space-y-1.5 pt-0.5">
-            <div className="h-1.5 w-full rounded-full bg-white/90" />
-            <div className="h-1.5 w-3/4 rounded-full bg-white/75" />
-            <div className="h-1.5 w-4/5 rounded-full bg-white/85" />
+      {/* Latar belakang medali lingkaran burgundy gelap */}
+      <div className="flex h-28 w-28 items-center justify-center rounded-full border border-[#441834] bg-gradient-to-b from-[#2e1022] to-[#150711] shadow-inner shadow-[#52193d]/30">
+        {/* Kertas Resi Struk Pink Halus */}
+        <div className="relative h-[68px] w-14 overflow-hidden rounded-t-xl bg-gradient-to-b from-[#f472b6] to-[#db2777] p-2.5 pb-4 shadow-md">
+          {/* Garis-garis putih rounded di dalam struk */}
+          <div className="space-y-1.5 pt-1">
+            <div className="h-1.5 w-full rounded-full bg-white/95" />
+            <div className="h-1.5 w-3/4 rounded-full bg-white/80" />
+            <div className="h-1.5 w-5/6 rounded-full bg-white/90" />
           </div>
 
-          {/* Gerigi potongan bawah struk (zig-zag) */}
+          {/* Gerigi lekukan lembut bawah struk (scalloped rippled bottom) */}
           <svg
-            className="absolute -bottom-2 left-0 w-full text-[#db2777]"
-            viewBox="0 0 56 8"
+            className="absolute -bottom-0.5 left-0 w-full text-[#db2777]"
+            viewBox="0 0 56 6"
             fill="currentColor"
             preserveAspectRatio="none"
             aria-hidden="true"
           >
-            <path d="M0 0 L4 8 L8 0 L12 8 L16 0 L20 8 L24 0 L28 8 L32 0 L36 8 L40 0 L44 8 L48 0 L52 8 L56 0 Z" />
+            <path d="M0,0 Q5.6,6 11.2,0 Q16.8,6 22.4,0 Q28,6 33.6,0 Q39.2,6 44.8,0 Q50.4,6 56,0 L56,6 L0,6 Z" />
           </svg>
         </div>
       </div>
@@ -226,25 +230,21 @@ export function RiwayatPage() {
   }, [periode]);
 
   return (
-    <div className="relative min-h-dvh bg-[#120811] pb-28 text-white">
-      {/* Efek kilau latar belakang burgundy mewah seperti di contoh.webp */}
+    <div className="relative min-h-dvh bg-[#120811] pb-24 text-white">
+      {/* Efek kilau latar belakang burgundy mewah di sudut kanan atas seperti di contoh.webp */}
       <div
-        className="pointer-events-none absolute -top-16 -right-16 h-80 w-80 rounded-full bg-[#821842]/30 blur-3xl"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute top-72 -left-20 h-72 w-72 rounded-full bg-[#591132]/25 blur-3xl"
+        className="pointer-events-none absolute -right-12 -top-12 h-72 w-72 rounded-full bg-[#821842]/30 blur-3xl"
         aria-hidden="true"
       />
 
       <div className="mx-auto w-full max-w-md px-4 pt-safe">
         {/* 1. Header (Riwayat & Tombol Filter) */}
-        <header className="flex items-center justify-between pb-3 pt-4">
+        <header className="flex items-center justify-between pb-1 pt-2.5">
           <div>
-            <h1 className="font-display text-2xl font-bold tracking-tight text-white">
+            <h1 className="font-sans text-[22px] font-bold tracking-tight text-white">
               Riwayat
             </h1>
-            <p className="mt-0.5 text-xs text-[#c49baa]">
+            <p className="mt-0.5 font-sans text-xs text-[#a07a8c]">
               Kelola dan pantau semua transaksi kamu
             </p>
           </div>
@@ -253,17 +253,17 @@ export function RiwayatPage() {
             type="button"
             onClick={() => setPanelFilterBuka((v) => !v)}
             aria-label="Filter kategori dan rentang"
-            className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl border border-[#3e1d34] bg-[#220f1c] text-[#d4a5b8] shadow-sm transition-colors hover:bg-[#2e1426] hover:text-white"
+            className="grid h-9 w-9 shrink-0 place-items-center rounded-2xl border border-[#351528] bg-[#1a0a16] text-[#b88fa3] shadow-sm transition-colors hover:text-white active:scale-95"
           >
-            <Filter size={18} aria-hidden="true" />
+            <Filter size={17} strokeWidth={1.8} aria-hidden="true" />
           </button>
         </header>
 
         {/* 2. Kolom Pencarian */}
         <div className="relative mt-2">
           <Search
-            size={18}
-            className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8f6477]"
+            size={16}
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#7d536a]"
             aria-hidden="true"
           />
           <input
@@ -271,13 +271,13 @@ export function RiwayatPage() {
             value={cari}
             onChange={(e) => setCari(e.target.value)}
             placeholder="Cari keterangan, kategori, atau nominal..."
-            className="w-full rounded-2xl border border-[#341629] bg-[#1d0c18] py-2.5 pl-10 pr-4 text-xs text-white placeholder:text-[#8f6477] focus:border-[#d0346d] focus:outline-none focus:ring-2 focus:ring-[#d0346d]/25 transition-all"
+            className="w-full rounded-2xl border border-[#301325] bg-[#1a0a16] py-2 pl-9 pr-4 font-sans text-xs text-white placeholder:text-[#7d536a] transition-all focus:border-[#db2777] focus:outline-none"
           />
           {cari && (
             <button
               type="button"
               onClick={() => setCari('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8f6477] hover:text-white"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#7d536a] hover:text-white"
             >
               <X size={14} />
             </button>
@@ -285,7 +285,7 @@ export function RiwayatPage() {
         </div>
 
         {/* 3. Baris Tombol Filter Waktu (Pills Horizontal) */}
-        <div className="no-scrollbar -mx-4 mt-3 flex items-center gap-2 overflow-x-auto px-4 pb-1">
+        <div className="no-scrollbar -mx-4 mt-2.5 flex items-center gap-1.5 overflow-x-auto px-4 pb-0.5">
           {DAFTAR_PERIODE.map((item) => {
             const aktif = periode === item.id;
             return (
@@ -294,13 +294,13 @@ export function RiwayatPage() {
                 type="button"
                 onClick={() => setPeriode(item.id)}
                 className={cn(
-                  'flex min-h-[2.25rem] shrink-0 items-center gap-1.5 rounded-full px-4 text-xs font-semibold transition-all',
+                  'flex shrink-0 items-center justify-center gap-1 rounded-full px-3.5 py-1 text-[11px] font-semibold transition-all',
                   aktif
-                    ? 'bg-[#d0346d] text-white shadow-md shadow-[#d0346d]/30'
-                    : 'border border-[#341629] bg-[#1d0c18] text-[#c49baa] hover:bg-[#281122] hover:text-white',
+                    ? 'bg-[#db2777] text-white shadow-md shadow-pink-950/60'
+                    : 'border border-[#301325] bg-[#1a0a16] text-[#b88fa3] hover:text-white',
                 )}
               >
-                {item.denganIkon && <Calendar size={13} aria-hidden="true" />}
+                {item.denganIkon && <Calendar size={12} aria-hidden="true" />}
                 <span>{item.label}</span>
               </button>
             );
@@ -309,30 +309,30 @@ export function RiwayatPage() {
 
         {/* Input Tanggal Kustom (Jika 'Kustom' dipilih) */}
         {periode === 'kustom' && (
-          <div className="mt-2.5 grid grid-cols-2 gap-2 rounded-2xl border border-[#341629] bg-[#1d0c18] p-3 text-xs">
+          <div className="mt-2 grid grid-cols-2 gap-2 rounded-2xl border border-[#301325] bg-[#1a0a16] p-2.5 text-xs">
             <div>
-              <label className="mb-1 block text-[11px] text-[#8f6477]">Dari Tanggal</label>
+              <label className="mb-1 block text-[10px] text-[#7d536a]">Dari Tanggal</label>
               <input
                 type="date"
                 value={dari}
                 onChange={(e) => setDari(e.target.value)}
-                className="w-full rounded-xl border border-[#341629] bg-[#140812] px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[#d0346d]"
+                className="w-full rounded-xl border border-[#301325] bg-[#120811] px-2 py-1 text-xs text-white focus:border-[#db2777] focus:outline-none"
               />
             </div>
             <div>
-              <label className="mb-1 block text-[11px] text-[#8f6477]">Sampai Tanggal</label>
+              <label className="mb-1 block text-[10px] text-[#7d536a]">Sampai Tanggal</label>
               <input
                 type="date"
                 value={sampai}
                 onChange={(e) => setSampai(e.target.value)}
-                className="w-full rounded-xl border border-[#341629] bg-[#140812] px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[#d0346d]"
+                className="w-full rounded-xl border border-[#301325] bg-[#120811] px-2 py-1 text-xs text-white focus:border-[#db2777] focus:outline-none"
               />
             </div>
           </div>
         )}
 
         {/* 4. Kartu Unggulan Ringkasan (Featured Summary Card) */}
-        <div className="relative mt-3.5 overflow-hidden rounded-3xl border border-[#8a224d]/40 bg-gradient-to-br from-[#7a1a44] via-[#541230] to-[#33081c] p-5 text-white shadow-xl">
+        <div className="relative mt-2.5 overflow-hidden rounded-3xl border border-[#5c1637]/50 bg-gradient-to-br from-[#68183c] via-[#48112b] to-[#250817] p-4 text-white shadow-xl shadow-pink-950/40">
           {/* Garis-garis gelombang halus seperti di contoh.webp */}
           <svg
             className="pointer-events-none absolute inset-0 h-full w-full opacity-20"
@@ -340,14 +340,24 @@ export function RiwayatPage() {
             viewBox="0 0 400 200"
             aria-hidden="true"
           >
-            <path d="M-40,160 Q120,60 260,130 T520,30" fill="none" stroke="white" strokeWidth="28" />
-            <path d="M-40,110 Q140,20 300,90 T520,10" fill="none" stroke="white" strokeWidth="18" />
+            <path
+              d="M-20,130 C90,60 180,160 420,50 L420,200 L-20,200 Z"
+              fill="white"
+              opacity="0.35"
+            />
+            <path
+              d="M-20,90 C100,160 210,30 420,110"
+              fill="none"
+              stroke="white"
+              strokeWidth="18"
+              opacity="0.45"
+            />
           </svg>
 
           {/* Baris Atas Kartu */}
           <div className="relative z-10 flex items-center justify-between">
-            <div className="flex items-center gap-1.5 text-xs font-medium text-pink-100">
-              <Calendar size={14} aria-hidden="true" />
+            <div className="flex items-center gap-1.5 text-xs font-medium text-pink-100/90">
+              <Calendar size={13} aria-hidden="true" />
               <span>Ringkasan {labelPeriode}</span>
             </div>
 
@@ -356,10 +366,10 @@ export function RiwayatPage() {
               <button
                 type="button"
                 onClick={() => setMenuKategoriBuka((v) => !v)}
-                className="flex items-center gap-1 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+                className="flex items-center gap-1 rounded-full border border-white/20 bg-white/10 px-2.5 py-0.5 text-[11px] font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/20"
               >
                 <span>{kategoriTerpilih || 'Semua'}</span>
-                <ChevronDown size={13} aria-hidden="true" />
+                <ChevronDown size={12} aria-hidden="true" />
               </button>
 
               {menuKategoriBuka && (
@@ -371,8 +381,8 @@ export function RiwayatPage() {
                       setMenuKategoriBuka(false);
                     }}
                     className={cn(
-                      'w-full rounded-lg px-2.5 py-1.5 text-left text-xs transition-colors',
-                      kategoriTerpilih === null ? 'bg-[#d0346d] text-white font-semibold' : 'text-pink-100 hover:bg-white/10',
+                      'w-full rounded-lg px-2.5 py-1 text-left text-xs transition-colors',
+                      kategoriTerpilih === null ? 'bg-[#db2777] text-white font-semibold' : 'text-pink-100 hover:bg-white/10',
                     )}
                   >
                     Semua
@@ -386,8 +396,8 @@ export function RiwayatPage() {
                         setMenuKategoriBuka(false);
                       }}
                       className={cn(
-                        'w-full rounded-lg px-2.5 py-1.5 text-left text-xs transition-colors',
-                        kategoriTerpilih === k.nama ? 'bg-[#d0346d] text-white font-semibold' : 'text-pink-100 hover:bg-white/10',
+                        'w-full rounded-lg px-2.5 py-1 text-left text-xs transition-colors',
+                        kategoriTerpilih === k.nama ? 'bg-[#db2777] text-white font-semibold' : 'text-pink-100 hover:bg-white/10',
                       )}
                     >
                       {k.nama}
@@ -398,32 +408,32 @@ export function RiwayatPage() {
             </div>
           </div>
 
-          {/* Nominal Saldo Utama Besar */}
-          <div className="relative z-10 my-3 font-display text-3xl font-extrabold tracking-tight tabular-nums text-white">
+          {/* Nominal Saldo Utama Besar (Font Sans Bold Modern Sesuai contoh.webp) */}
+          <div className="relative z-10 my-2 font-sans text-[28px] font-extrabold tracking-tight tabular-nums text-white">
             {formatRupiah(total.saldo)}
           </div>
 
           {/* Baris Bawah: Pemasukan & Pengeluaran 2 Kolom */}
-          <div className="relative z-10 grid grid-cols-2 gap-3 border-t border-white/15 pt-3">
-            <div className="flex items-center gap-2.5">
-              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#10b981]/25 text-[#34d399]">
-                <ArrowDown size={16} strokeWidth={2.5} aria-hidden="true" />
+          <div className="relative z-10 grid grid-cols-2 gap-2 border-t border-white/10 pt-2.5">
+            <div className="flex items-center gap-2">
+              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-[#236b4e]/50 bg-[#143d2c]/80 text-[#34d399]">
+                <ArrowDown size={14} strokeWidth={2.5} aria-hidden="true" />
               </span>
               <div className="min-w-0">
-                <p className="text-[11px] font-medium text-pink-100/70">Pemasukan</p>
-                <p className="truncate text-sm font-bold text-white tabular-nums">
+                <p className="text-[10px] font-medium text-pink-100/70">Pemasukan</p>
+                <p className="truncate text-xs font-bold tabular-nums text-white">
                   {formatRupiah(total.masuk)}
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-2.5 border-l border-white/15 pl-3">
-              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#f43f5e]/25 text-[#fb7185]">
-                <ArrowUp size={16} strokeWidth={2.5} aria-hidden="true" />
+            <div className="flex items-center gap-2 border-l border-white/10 pl-2.5">
+              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-[#78233e]/50 bg-[#481424]/80 text-[#fb7185]">
+                <ArrowUp size={14} strokeWidth={2.5} aria-hidden="true" />
               </span>
               <div className="min-w-0">
-                <p className="text-[11px] font-medium text-pink-100/70">Pengeluaran</p>
-                <p className="truncate text-sm font-bold text-white tabular-nums">
+                <p className="text-[10px] font-medium text-pink-100/70">Pengeluaran</p>
+                <p className="truncate text-xs font-bold tabular-nums text-white">
                   {formatRupiah(total.keluar)}
                 </p>
               </div>
@@ -432,23 +442,23 @@ export function RiwayatPage() {
         </div>
 
         {/* 5. Tiga Kartu Statistik Mini (Masuk, Keluar, Saldo) */}
-        <div className="mt-3.5 grid grid-cols-3 gap-2.5">
+        <div className="mt-2.5 grid grid-cols-3 gap-2">
           {/* Card 1: Masuk */}
           <button
             type="button"
             onClick={() => setFokus('masuk')}
             className={cn(
-              'flex flex-col rounded-2xl border p-3 text-left transition-all',
+              'flex flex-col rounded-2xl border p-2.5 text-left transition-all',
               fokus === 'masuk'
-                ? 'border-[#10b981]/50 bg-[#162920] shadow-sm'
-                : 'border-[#341629] bg-[#1d0c18] hover:bg-[#261020]',
+                ? 'border-[#10b981]/60 bg-[#132b20] shadow-sm'
+                : 'border-[#301325] bg-[#180a15] hover:bg-[#200d1c]',
             )}
           >
-            <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#10b981]/15 text-[#10b981]">
-              <Wallet size={15} aria-hidden="true" />
+            <span className="grid h-6 w-6 place-items-center rounded-lg bg-[#143324] text-[#34d399]">
+              <Wallet size={14} aria-hidden="true" />
             </span>
-            <span className="mt-2 text-[11px] font-medium text-[#c49baa]">Masuk</span>
-            <span className="mt-0.5 truncate text-xs font-bold tabular-nums text-[#34d399]">
+            <span className="mt-1.5 text-[10px] font-medium text-[#9c758a]">Masuk</span>
+            <span className="mt-0.5 truncate text-[11px] font-bold tabular-nums text-[#34d399]">
               {formatRupiah(total.masuk)}
             </span>
           </button>
@@ -458,17 +468,17 @@ export function RiwayatPage() {
             type="button"
             onClick={() => setFokus('keluar')}
             className={cn(
-              'flex flex-col rounded-2xl border p-3 text-left transition-all',
+              'flex flex-col rounded-2xl border p-2.5 text-left transition-all',
               fokus === 'keluar'
-                ? 'border-[#f43f5e]/50 bg-[#2d121c] shadow-sm'
-                : 'border-[#341629] bg-[#1d0c18] hover:bg-[#261020]',
+                ? 'border-[#f43f5e]/60 bg-[#2d121c] shadow-sm'
+                : 'border-[#301325] bg-[#180a15] hover:bg-[#200d1c]',
             )}
           >
-            <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#f43f5e]/15 text-[#f43f5e]">
-              <Upload size={15} aria-hidden="true" />
+            <span className="grid h-6 w-6 place-items-center rounded-lg bg-[#3d1523] text-[#fb7185]">
+              <Upload size={14} aria-hidden="true" />
             </span>
-            <span className="mt-2 text-[11px] font-medium text-[#c49baa]">Keluar</span>
-            <span className="mt-0.5 truncate text-xs font-bold tabular-nums text-[#fb7185]">
+            <span className="mt-1.5 text-[10px] font-medium text-[#9c758a]">Keluar</span>
+            <span className="mt-0.5 truncate text-[11px] font-bold tabular-nums text-[#fb7185]">
               {formatRupiah(total.keluar)}
             </span>
           </button>
@@ -478,24 +488,24 @@ export function RiwayatPage() {
             type="button"
             onClick={() => setFokus('semua')}
             className={cn(
-              'flex flex-col rounded-2xl border p-3 text-left transition-all',
+              'flex flex-col rounded-2xl border p-2.5 text-left transition-all',
               fokus === 'semua'
-                ? 'border-[#d0346d]/50 bg-[#2a101f] shadow-sm'
-                : 'border-[#341629] bg-[#1d0c18] hover:bg-[#261020]',
+                ? 'border-[#db2777]/60 bg-[#2b1020] shadow-sm'
+                : 'border-[#301325] bg-[#180a15] hover:bg-[#200d1c]',
             )}
           >
-            <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#d0346d]/15 text-[#d0346d]">
-              <Layers size={15} aria-hidden="true" />
+            <span className="grid h-6 w-6 place-items-center rounded-lg bg-[#3d122e] text-[#f472b6]">
+              <Layers size={14} aria-hidden="true" />
             </span>
-            <span className="mt-2 text-[11px] font-medium text-[#c49baa]">Saldo</span>
-            <span className="mt-0.5 truncate text-xs font-bold tabular-nums text-white">
+            <span className="mt-1.5 text-[10px] font-medium text-[#9c758a]">Saldo</span>
+            <span className="mt-0.5 truncate text-[11px] font-bold tabular-nums text-white">
               {formatRupiah(total.saldo)}
             </span>
           </button>
         </div>
 
-        {/* 6. Tiga Tab Segmentasi Cepat */}
-        <div className="mt-3.5 grid grid-cols-3 gap-1 rounded-2xl border border-[#341629] bg-[#1d0c18] p-1 text-xs font-semibold">
+        {/* 6. Tiga Tab Segmentasi Cepat (1 Baris Rapi) */}
+        <div className="mt-2.5 grid grid-cols-3 gap-1 rounded-2xl border border-[#2e1224] bg-[#140812] p-1 text-[11px] font-semibold">
           <button
             type="button"
             onClick={() => {
@@ -503,14 +513,14 @@ export function RiwayatPage() {
               setKategoriTerpilih(null);
             }}
             className={cn(
-              'flex min-h-[2.5rem] items-center justify-center gap-1.5 rounded-xl transition-all',
+              'flex min-h-[2.25rem] items-center justify-center gap-1 rounded-xl px-1 tracking-tight transition-all',
               fokus === 'semua'
-                ? 'bg-white font-bold text-[#190814] shadow-sm'
-                : 'text-[#c49baa] hover:text-white',
+                ? 'bg-[#eedae5] font-bold text-[#1b0816] shadow-sm'
+                : 'text-[#9c758a] hover:text-white',
             )}
           >
-            <List size={14} aria-hidden="true" />
-            <span>Semua ({total.countTotal})</span>
+            <List size={13} strokeWidth={2.5} aria-hidden="true" />
+            <span className="truncate">Semua ({total.countTotal})</span>
           </button>
 
           <button
@@ -520,14 +530,14 @@ export function RiwayatPage() {
               setKategoriTerpilih(null);
             }}
             className={cn(
-              'flex min-h-[2.5rem] items-center justify-center gap-1.5 rounded-xl transition-all',
+              'flex min-h-[2.25rem] items-center justify-center gap-1 rounded-xl px-1 tracking-tight transition-all',
               fokus === 'keluar'
-                ? 'bg-white font-bold text-[#190814] shadow-sm'
-                : 'text-[#c49baa] hover:text-[#fb7185]',
+                ? 'bg-[#eedae5] font-bold text-[#1b0816] shadow-sm'
+                : 'text-[#9c758a] hover:text-[#fb7185]',
             )}
           >
-            <ArrowUp size={14} aria-hidden="true" />
-            <span>Pengeluaran ({total.countKeluar})</span>
+            <ArrowUp size={13} strokeWidth={2} aria-hidden="true" />
+            <span className="truncate">Pengeluaran ({total.countKeluar})</span>
           </button>
 
           <button
@@ -537,27 +547,27 @@ export function RiwayatPage() {
               setKategoriTerpilih(null);
             }}
             className={cn(
-              'flex min-h-[2.5rem] items-center justify-center gap-1.5 rounded-xl transition-all',
+              'flex min-h-[2.25rem] items-center justify-center gap-1 rounded-xl px-1 tracking-tight transition-all',
               fokus === 'masuk'
-                ? 'bg-white font-bold text-[#190814] shadow-sm'
-                : 'text-[#c49baa] hover:text-[#34d399]',
+                ? 'bg-[#eedae5] font-bold text-[#1b0816] shadow-sm'
+                : 'text-[#9c758a] hover:text-[#34d399]',
             )}
           >
-            <ArrowDown size={14} aria-hidden="true" />
-            <span>Pemasukan ({total.countMasuk})</span>
+            <ArrowDown size={13} strokeWidth={2} aria-hidden="true" />
+            <span className="truncate">Pemasukan ({total.countMasuk})</span>
           </button>
         </div>
 
         {/* Panel Filter Kategori Tambahan (Bisa dibuka lewat tombol filter atas) */}
         {panelFilterBuka && (
-          <div className="mt-3 rounded-2xl border border-[#3e1d34] bg-[#1d0c18] p-3 text-xs">
-            <div className="mb-2 flex items-center justify-between text-[#c49baa]">
+          <div className="mt-2.5 rounded-2xl border border-[#351528] bg-[#1a0a16] p-2.5 text-xs">
+            <div className="mb-2 flex items-center justify-between text-[#b88fa3]">
               <span className="font-semibold">Filter Berdasarkan Kategori</span>
               {kategoriTerpilih && (
                 <button
                   type="button"
                   onClick={() => setKategoriTerpilih(null)}
-                  className="text-xs text-[#d0346d] underline"
+                  className="text-xs text-[#db2777] underline"
                 >
                   Reset
                 </button>
@@ -568,10 +578,10 @@ export function RiwayatPage() {
                 type="button"
                 onClick={() => setKategoriTerpilih(null)}
                 className={cn(
-                  'min-h-[2rem] rounded-full px-3 py-1 font-medium transition-colors',
+                  'min-h-[1.75rem] rounded-full px-3 py-0.5 text-xs font-medium transition-colors',
                   kategoriTerpilih === null
-                    ? 'bg-[#d0346d] text-white font-semibold'
-                    : 'border border-[#341629] bg-[#140812] text-[#c49baa]',
+                    ? 'bg-[#db2777] text-white font-semibold'
+                    : 'border border-[#301325] bg-[#120811] text-[#b88fa3]',
                 )}
               >
                 Semua Kategori
@@ -584,10 +594,10 @@ export function RiwayatPage() {
                     type="button"
                     onClick={() => setKategoriTerpilih(aktif ? null : k.nama)}
                     className={cn(
-                      'min-h-[2rem] rounded-full px-3 py-1 font-medium transition-colors',
+                      'min-h-[1.75rem] rounded-full px-3 py-0.5 text-xs font-medium transition-colors',
                       aktif
-                        ? 'bg-[#d0346d] text-white font-semibold'
-                        : 'border border-[#341629] bg-[#140812] text-[#c49baa]',
+                        ? 'bg-[#db2777] text-white font-semibold'
+                        : 'border border-[#301325] bg-[#120811] text-[#b88fa3]',
                     )}
                   >
                     {k.nama}
@@ -599,34 +609,34 @@ export function RiwayatPage() {
         )}
 
         {/* 7. Konten: Status Kosong ATAU Daftar Transaksi */}
-        <div className="mt-6">
+        <div className="mt-3">
           {difilter.length === 0 ? (
             /* Tampilan Kosong Persis contoh.webp */
-            <div className="flex flex-col items-center justify-center py-6 text-center">
+            <div className="flex flex-col items-center justify-center text-center">
               <IlustrasiResiStruk />
-              <h2 className="mt-4 font-display text-lg font-bold text-white">
+              <h2 className="mt-2.5 font-sans text-[15px] font-bold text-white">
                 Riwayat masih kosong
               </h2>
-              <p className="mt-1.5 max-w-xs text-xs leading-relaxed text-[#a87d90]">
+              <p className="mt-0.5 max-w-[250px] font-sans text-[11px] leading-relaxed text-[#9c758a]">
                 Semua transaksi yang kamu catat tersimpan di sini dan bisa difilter per hari, minggu, atau bulan.
               </p>
               <button
                 type="button"
                 onClick={() => sheet.tambah()}
-                className="mt-4 flex min-h-[2.75rem] items-center gap-1.5 rounded-full bg-[#d0346d] px-6 text-xs font-semibold text-white shadow-lg shadow-[#d0346d]/30 transition-transform active:scale-95 hover:bg-[#b5285b]"
+                className="mt-3 flex items-center gap-1.5 rounded-2xl bg-gradient-to-r from-[#d0246a] to-[#a3154e] px-5 py-2 font-sans text-xs font-semibold text-white shadow-lg shadow-pink-950/70 transition-transform active:scale-95 hover:brightness-110"
               >
-                <Plus size={16} aria-hidden="true" />
+                <Plus size={15} strokeWidth={2.5} aria-hidden="true" />
                 <span>Catat Transaksi</span>
               </button>
             </div>
           ) : (
             /* Daftar Transaksi jika ada data */
-            <div className="space-y-4">
+            <div className="space-y-3">
               {grupHari.map((grup) => (
                 <section key={grup.label} aria-label={grup.label}>
-                  <div className="mb-2 flex items-baseline justify-between px-1">
-                    <h3 className="text-xs font-semibold text-[#c49baa]">{grup.label}</h3>
-                    <span className="text-xs font-medium tabular-nums text-[#8f6477]">
+                  <div className="mb-1.5 flex items-baseline justify-between px-1">
+                    <h3 className="text-xs font-semibold text-[#b88fa3]">{grup.label}</h3>
+                    <span className="text-xs font-medium tabular-nums text-[#7d536a]">
                       {formatRupiah(grup.net)}
                     </span>
                   </div>
@@ -641,15 +651,15 @@ export function RiwayatPage() {
                           onHapus={() => void hapus(t)}
                           labelHapus={`Hapus ${judul}`}
                         >
-                          <div className="flex items-center gap-3 rounded-2xl border border-[#341629] bg-[#1d0c18] px-4 py-3 transition-colors hover:bg-[#251020]">
+                          <div className="flex items-center gap-3 rounded-2xl border border-[#301325] bg-[#1a0a16] px-4 py-2.5 transition-colors hover:bg-[#220e1f]">
                             <div className="min-w-0 flex-1">
                               <p className="truncate text-sm font-semibold text-white">{judul}</p>
-                              <p className="mt-0.5 flex items-center gap-1.5 text-xs text-[#8f6477]">
+                              <p className="mt-0.5 flex items-center gap-1.5 text-xs text-[#7d536a]">
                                 <span className="tabular-nums">{formatJam(t.waktu)}</span>
                                 {t.kategori && (
                                   <>
                                     <span aria-hidden="true">·</span>
-                                    <span className="truncate text-[#c49baa]">{t.kategori}</span>
+                                    <span className="truncate text-[#b88fa3]">{t.kategori}</span>
                                   </>
                                 )}
                               </p>
@@ -680,9 +690,9 @@ export function RiwayatPage() {
         type="button"
         onClick={() => sheet.tambah()}
         aria-label="Catat transaksi baru"
-        className="fixed bottom-[calc(5rem_+_env(safe-area-inset-bottom))] right-4 z-30 grid h-14 w-14 place-items-center rounded-full bg-[#d0346d] text-white shadow-xl shadow-[#d0346d]/40 transition-transform active:scale-95 hover:bg-[#b5285b]"
+        className="fixed bottom-[calc(4.5rem_+_env(safe-area-inset-bottom))] right-4 z-30 grid h-13 w-13 place-items-center rounded-full bg-gradient-to-br from-[#e11d68] to-[#b31454] text-white shadow-xl shadow-pink-950/80 transition-transform hover:scale-105 active:scale-95"
       >
-        <Plus size={26} strokeWidth={2.5} aria-hidden="true" />
+        <Plus size={24} strokeWidth={2.5} aria-hidden="true" />
       </button>
 
       {/* Lembar Dialog Form Transaksi */}
