@@ -3,6 +3,7 @@ import { TabBar, type TabId } from './components/layout/TabBar';
 import { ToastProvider } from './components/ui/Toast';
 import { OnboardingTip } from './components/OnboardingTip';
 import { pastikanSeed } from './db/db';
+import { jalankanSinkronisasiAwal } from './services/cloudSync';
 import { BerandaPage } from './pages/BerandaPage';
 import { RiwayatPage } from './pages/RiwayatPage';
 import { ResepPage } from './pages/ResepPage';
@@ -22,7 +23,9 @@ export function App() {
   const [tipTerbuka, setTipTerbuka] = useState(false);
 
   useEffect(() => {
-    void pastikanSeed();
+    void pastikanSeed().then(() => {
+      void jalankanSinkronisasiAwal();
+    });
   }, []);
 
   useEffect(() => {

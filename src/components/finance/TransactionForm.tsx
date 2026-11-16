@@ -6,6 +6,9 @@ import { dariInputDatetimeLocal, keInputDatetimeLocal } from '../../utils/date';
 import { simpanTransaksi, tambahKategori } from '../../db/db';
 import { buatId } from '../../utils/id';
 import { useHapusTransaksi } from '../../hooks/useHapusTransaksi';
+import { useToast } from '../ui/Toast';
+import { kirimLaporanTransaksiBaru } from '../../services/emailService';
+import { unggahTransaksiCloud } from '../../services/supabase';
 import type { JenisTransaksi, Kategori, Transaksi } from '../../types';
 
 export function TransactionForm({
@@ -21,6 +24,7 @@ export function TransactionForm({
 }) {
   const sedangEdit = transaksi !== null;
   const hapus = useHapusTransaksi();
+  const tampilkanToast = useToast();
 
   const [jenis, setJenis] = useState<JenisTransaksi>(transaksi?.jenis ?? jenisDefault);
   const [nominalDigit, setNominalDigit] = useState(transaksi ? String(transaksi.nominal) : '');
@@ -65,7 +69,20 @@ export function TransactionForm({
       waktu: dariInputDatetimeLocal(waktuInput),
       dibuat: transaksi?.dibuat ?? Date.now(),
     };
+
+    // 1. Simpan langsung ke memori lokal IndexedDB (0ms lag)
     await simpanTransaksi(data);
+
+    // 2. Unggah ke Cloud Database jika tersambung
+    void unggahTransaksiCloud(data);
+
+    // 3. Kirim notifikasi email rincian laporan ke giacantik749@gmail.com di latar belakang
+    void kirimLaporanTransaksiBaru(data).then((res) => {
+      if (res.success && res.provider !== 'simulasi') {
+        tampilkanToast({ pesan: 'Laporan transaksi terkirim ke giacantik749@gmail.com' });
+      }
+    });
+
     onSelesai();
   }
 

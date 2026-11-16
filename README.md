@@ -10,8 +10,11 @@ Aplikasi web *mobile-first* (PWA) untuk mencatat keuangan harian (pemasukan dan 
 ---
 
 ## Status Pengembangan
-Aplikasi ini sudah siap pakai untuk pencatatan harian dasar, namun **masih membutuhkan pengembangan lebih lanjut yang jelas**, meliputi:
-1. **Laporan & Analisis Keuangan:** Grafik tren bulanan/tahunan yang lebih komprehensif dan perhitungan laba-rugi otomatis.
-2. **Sinkronisasi Data:** Opsi cadangan online (cloud sync) untuk sinkronisasi antar perangkat.
-3. **Manajemen Bahan & Stok:** Integrasi buku resep dengan pengurangan stok bahan baku otomatis saat produksi kue.
-4. **Cetak & Bukti Transaksi:** Kemampuan mencetak nota atau struk ringkas untuk pesanan pelanggan.
+Aplikasi ini kini telah dilengkapi dengan **Fitur Backend Serverless & Sinkronisasi Online**:
+1. **Laporan Masuk Otomatis ke Email:** Setiap transaksi kasir (pemasukan & pengeluaran) otomatis mengirimkan notifikasi rincian ke `giacantik749@gmail.com`. Dilengkapi fitur kirim rekap harian dan uji coba email dari menu Pengaturan.
+2. **Akses Online & Cloud Database (Supabase):** Data tidak lagi terbatas hanya di perangkat lokal. Tersedia sinkronisasi cloud dua arah (hybrid offline-first + online sync) sehingga pemilik dapat memantau keuangan toko kue dari perangkat mana saja.
+3. **Penyimpanan Lokal & PWA Standalone:** Tetap dapat beroperasi offline 100% menggunakan Dexie IndexedDB dan otomatis sinkron saat online kembali.
+
+Pengembangan lanjutan berikutnya:
+- **Manajemen Bahan & Stok:** Integrasi buku resep dengan pengurangan stok bahan baku otomatis saat produksi kue.
+- **Cetak & Bukti Transaksi:** Kemampuan mencetak nota atau struk ringkas untuk pesanan pelanggan via Web Bluetooth termal.

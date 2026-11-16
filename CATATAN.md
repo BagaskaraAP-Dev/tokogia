@@ -68,24 +68,43 @@ Aplikasi ini adalah web app *mobile-first* (Progressive Web App / PWA) yang dira
 | **Form Transaksi** | `src/components/finance/TransactionForm.tsx` | Form input pemasukan/pengeluaran |
 | **Buku Resep** | `src/pages/ResepPage.tsx` | Manajemen resep kue |
 | **Database Lokal** | `src/db/db.ts` | Konfigurasi tabel Dexie IndexedDB |
+| **API Laporan Email** | `api/laporan.ts` | Endpoint serverless Vercel pengirim email ke giacantik749@gmail.com |
+| **API Transaksi Cloud** | `api/transaksi.ts` | Endpoint REST serverless untuk simpan transaksi online & kirim notifikasi |
+| **API Sinkronisasi** | `api/sync.ts` | Sinkronisasi batch dua arah antara lokal dan cloud |
+| **Service Email Frontend** | `src/services/emailService.ts` | Logika pengiriman email transaksi, rekap harian, dan tes kirim |
+| **Client Supabase Cloud** | `src/services/supabase.ts` | Penghubung database online Supabase & sinkronisasi data |
+| **Skema SQL Cloud** | `supabase/schema.sql` | Skrip pembuatan tabel database PostgreSQL di Supabase |
 | **Generator Ikon** | `scripts/generate-icons.mjs` | Script otomatis pemotong logo & pembuat favicon |
-| **Konfigurasi PWA** | `vite.config.ts` | Service worker dan manifest PWA |
+| **Konfigurasi PWA** | `vite.config.ts` | Service worker, proxy API lokal, dan manifest PWA |
 | **Foto Logo Asli** | `public/logo-giaa.png` | Aset logo resmi resolusi tinggi 512x512 |
 
 ---
 
-## 4. Rencana Kebutuhan Pengembangan Lanjutan (Roadmap)
+## 4. Fitur Backend & Online (Terselesaikan)
 
-Aplikasi ini sudah solid untuk operasional harian kasir/baking, namun masih terbuka untuk pengembangan fitur lebih lanjut di masa mendatang:
+### A. Laporan Otomatis ke Email giacantik749@gmail.com
+- **Notifikasi Transaksi Baru:** Setiap kali kasir mencatat pemasukan atau pengeluaran baru, backend otomatis merakit email HTML bernuansa Gia's Patisserie (Burgundy & Bakery Pink) dan mengirimkannya ke `giacantik749@gmail.com`.
+- **Rincian Email Lengkap:** Menyajikan jenis transaksi, badge warna (hijau pemasukan / rose pengeluaran), nominal rupiah jelas, keterangan, kategori, waktu WIB, dan ringkasan saldo hari ini.
+- **Kirim Rekap Hari Ini:** Di halaman Pengaturan, pemilik atau kasir dapat mengirimkan rekapitulasi harian lengkap kapan saja dengan satu ketukan.
+- **Tes Kirim Email Langsung:** Tombol pengujian langsung di aplikasi untuk memastikan email berhasil diterima di `giacantik749@gmail.com`.
+- **Dukungan Pengiriman:** Mendukung Gmail SMTP (Google App Password) maupun Resend API secara otomatis dengan fallback aman (tidak mengganggu jalannya aplikasi jika sedang offline).
 
-1. **Sinkronisasi Cloud / Multi-Device:**
-   - Menambahkan opsi akun/cloud database (misalnya Supabase atau Firebase) agar data bisa disinkronkan langsung antara HP kasir di toko dengan HP pemilik toko kue di rumah secara otomatis.
-2. **Manajemen Stok Bahan Baku Otomatis:**
-   - Menghubungkan buku resep dengan inventaris stok: ketika pesanan kue dicatat sebagai terjual/diproduksi, stok tepung, mentega, dan telur otomatis berkurang.
-3. **Cetak Nota / Struk Bluetooth:**
-   - Integrasi Web Bluetooth API untuk mencetak struk kasir termal mini (58mm/80mm) untuk pelanggan yang memesan kue.
-4. **Laporan Keuangan & Grafik Lanjutan:**
-   - Pembuatan laporan laba rugi bulanan dalam format file PDF yang siap dicetak atau dikirim via WhatsApp.
+### B. Akses Online & Sinkronisasi Multi-Perangkat (Cloud)
+- **Tidak Terbatas Hanya di Perangkat Lokal:** Aplikasi tidak lagi hanya sebatas IndexedDB di satu browser. Dengan integrasi Supabase (PostgreSQL), data otomatis tersimpan di cloud.
+- **Akses dari Mana Saja:** Pemilik toko kue dapat membuka `https://tokogia.vercel.app` di laptop atau ponsel pribadi di rumah dan melihat data transaksi yang diinput kasir di toko secara real-time.
+- **Hybrid Local-First + Cloud:** Tetap mempertahankan kecepatan 0ms dan kemampuan offline Dexie IndexedDB. Saat koneksi online kembali, data otomatis disinkronkan ke cloud.
+- **Panel Konfigurasi Supabase Mandiri:** Pemilik dapat memasukkan URL & Anon Key Supabase langsung di halaman Pengaturan tanpa harus mengubah kode program.
+
+---
+
+## 5. Rencana Kebutuhan Pengembangan Lanjutan (Roadmap)
+
+1. **Manajemen Stok Bahan Baku Otomatis:**
+   - Menghubungkan buku resep dengan inventaris stok: ketika kue terjual, stok bahan otomatis berkurang.
+2. **Cetak Nota / Struk Bluetooth:**
+   - Integrasi Web Bluetooth API untuk mencetak struk termal mini bagi pelanggan.
+3. **Laporan Keuangan & Grafik Lanjutan:**
+   - Pembuatan laporan laba rugi bulanan dalam format file PDF yang siap dicetak.
 
 ---
 
