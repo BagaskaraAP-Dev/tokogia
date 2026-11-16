@@ -1,19 +1,18 @@
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
-  ArrowDownRight,
-  ArrowRight,
-  ArrowUpRight,
+  ArrowDown,
+  ArrowUp,
+  Calendar,
+  ChevronDown,
+  Filter,
+  Layers,
+  List,
   Plus,
-  Receipt,
   Search,
+  Upload,
   Wallet,
+  X,
 } from 'lucide-react';
-import { PageHeader } from '../components/layout/PageHeader';
-import { EmptyState } from '../components/ui/EmptyState';
-import { ReceiptIllustration } from '../components/illustrations/Pastry';
-import { RingkasanBar, type FokusTransaksi } from '../components/finance/RingkasanBar';
-import { DayGroupedList } from '../components/finance/DayGroupedList';
-import { Fab } from '../components/finance/Fab';
 import { TransaksiSheet } from '../components/finance/TransaksiSheet';
 import { useKategori, useTransaksi } from '../hooks/useData';
 import { useTransaksiSheet } from '../hooks/useTransaksiSheet';
@@ -21,8 +20,9 @@ import { useHapusTransaksi } from '../hooks/useHapusTransaksi';
 import {
   HARI_MS,
   awalHariDariInputTanggal,
+  formatJam,
+  labelHariRelatif,
   rentangBulanIni,
-  rentangBulanLalu,
   rentangHari,
   rentangKemarin,
   rentangMingguIni,
@@ -31,27 +31,31 @@ import {
 import { formatRupiah } from '../utils/currency';
 import { cn } from '../utils/cn';
 import type { Transaksi } from '../types';
+import { SwipeRow } from '../components/finance/SwipeRow';
 
-type FilterId =
+type FilterPeriodeId =
   | 'hari-ini'
   | 'kemarin'
   | 'minggu-ini'
   | 'bulan-ini'
-  | 'bulan-lalu'
-  | 'semua'
-  | 'rentang';
+  | 'kustom';
 
-const FILTER: { id: FilterId; label: string }[] = [
+type FokusTransaksi = 'semua' | 'keluar' | 'masuk';
+
+const DAFTAR_PERIODE: { id: FilterPeriodeId; label: string; denganIkon?: boolean }[] = [
   { id: 'hari-ini', label: 'Hari ini' },
   { id: 'kemarin', label: 'Kemarin' },
   { id: 'minggu-ini', label: 'Minggu ini' },
   { id: 'bulan-ini', label: 'Bulan ini' },
-  { id: 'bulan-lalu', label: 'Bulan lalu' },
-  { id: 'semua', label: 'Semua' },
-  { id: 'rentang', label: 'Rentang' },
+  { id: 'kustom', label: 'Kustom', denganIkon: true },
 ];
 
-function hitungRentang(filter: FilterId, sekarang: number, dari: string, sampai: string): Rentang | null {
+function hitungRentangWaktu(
+  filter: FilterPeriodeId,
+  sekarang: number,
+  dari: string,
+  sampai: string,
+): Rentang | null {
   switch (filter) {
     case 'hari-ini':
       return rentangHari(sekarang);
@@ -61,17 +65,58 @@ function hitungRentang(filter: FilterId, sekarang: number, dari: string, sampai:
       return rentangMingguIni(sekarang);
     case 'bulan-ini':
       return rentangBulanIni(sekarang);
-    case 'bulan-lalu':
-      return rentangBulanLalu(sekarang);
-    case 'rentang': {
+    case 'kustom': {
       if (!dari || !sampai) return null;
       const tDari = awalHariDariInputTanggal(dari);
       const tSampai = awalHariDariInputTanggal(sampai) + HARI_MS;
       return { mulai: Math.min(tDari, tSampai), selesai: Math.max(tDari, tSampai) };
     }
-    case 'semua':
-      return null;
   }
+}
+
+/**
+ * Ilustrasi Resi Struk Khas Gia's Patisserie
+ * Meniru persis grafik lingkaran bercahaya dengan kertas struk pink bergerigi di contoh.webp
+ */
+function IlustrasiResiStruk() {
+  return (
+    <div className="relative mx-auto flex h-32 w-32 items-center justify-center">
+      {/* Kilauan / Sparkle di kanan atas */}
+      <svg
+        className="absolute -right-1 top-1 h-6 w-6 text-[#f472b6]"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path d="M12 0L14 9L23 11L14 13L12 22L10 13L1 11L10 9L12 0Z" opacity="0.85" />
+        <path d="M20 16L21 19L24 20L21 21L20 24L19 21L16 20L19 19L20 16Z" opacity="0.65" />
+      </svg>
+
+      {/* Latar belakang lingkaran gelap bercahaya lembut */}
+      <div className="flex h-28 w-28 items-center justify-center rounded-full border border-[#521b3a]/50 bg-gradient-to-b from-[#3a1329] to-[#1c0816] shadow-inner shadow-[#5c1a3e]/40">
+        {/* Kertas Resi Struk Pink */}
+        <div className="relative w-14 rounded-t-xl bg-gradient-to-b from-[#f472b6] to-[#db2777] p-2.5 shadow-md">
+          {/* Garis-garis putih di dalam struk */}
+          <div className="space-y-1.5 pt-0.5">
+            <div className="h-1.5 w-full rounded-full bg-white/90" />
+            <div className="h-1.5 w-3/4 rounded-full bg-white/75" />
+            <div className="h-1.5 w-4/5 rounded-full bg-white/85" />
+          </div>
+
+          {/* Gerigi potongan bawah struk (zig-zag) */}
+          <svg
+            className="absolute -bottom-2 left-0 w-full text-[#db2777]"
+            viewBox="0 0 56 8"
+            fill="currentColor"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <path d="M0 0 L4 8 L8 0 L12 8 L16 0 L20 8 L24 0 L28 8 L32 0 L36 8 L40 0 L44 8 L48 0 L52 8 L56 0 Z" />
+          </svg>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export function RiwayatPage() {
@@ -81,23 +126,24 @@ export function RiwayatPage() {
   const hapus = useHapusTransaksi();
   const sekarang = Date.now();
 
-  // Otomatis mulai di 'hari-ini' setiap kali membuka halaman Riwayat
-  const [filter, setFilter] = useState<FilterId>('hari-ini');
+  // State navigasi dan filter
+  const [periode, setPeriode] = useState<FilterPeriodeId>('hari-ini');
   const [fokus, setFokus] = useState<FokusTransaksi>('semua');
-  const [kategoriFilter, setKategoriFilter] = useState<string | null>(null);
+  const [kategoriTerpilih, setKategoriTerpilih] = useState<string | null>(null);
   const [cari, setCari] = useState('');
   const [dari, setDari] = useState('');
   const [sampai, setSampai] = useState('');
 
-  // Ref untuk deteksi gestur swipe geser ke kanan / kiri pada layar sentuh
-  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  // Dropdown kategori di kartu ringkasan
+  const [menuKategoriBuka, setMenuKategoriBuka] = useState(false);
+  const [panelFilterBuka, setPanelFilterBuka] = useState(false);
 
   const rentang = useMemo(
-    () => hitungRentang(filter, sekarang, dari, sampai),
-    [filter, sekarang, dari, sampai],
+    () => hitungRentangWaktu(periode, sekarang, dari, sampai),
+    [periode, sekarang, dari, sampai],
   );
 
-  // Transaksi dalam rentang waktu yang dipilih
+  // Transaksi dalam rentang periode
   const transaksiRentang = useMemo(() => {
     return transaksi.filter((t) => {
       if (rentang && (t.waktu < rentang.mulai || t.waktu >= rentang.selesai)) return false;
@@ -105,13 +151,12 @@ export function RiwayatPage() {
     });
   }, [transaksi, rentang]);
 
-  // Hitung total masuk, keluar, dan saldo dalam periode
+  // Hitung total finansial
   const total = useMemo(() => {
     let masuk = 0;
     let keluar = 0;
     let countMasuk = 0;
     let countKeluar = 0;
-    const rincianKeluarKategori: Record<string, number> = {};
 
     for (const t of transaksiRentang) {
       if (t.jenis === 'masuk') {
@@ -120,8 +165,6 @@ export function RiwayatPage() {
       } else {
         keluar += t.nominal;
         countKeluar += 1;
-        const kat = t.kategori || 'Tanpa Kategori';
-        rincianKeluarKategori[kat] = (rincianKeluarKategori[kat] || 0) + t.nominal;
       }
     }
 
@@ -132,16 +175,15 @@ export function RiwayatPage() {
       countMasuk,
       countKeluar,
       countTotal: transaksiRentang.length,
-      rincianKeluarKategori,
     };
   }, [transaksiRentang]);
 
-  // Filter akhir (fokus pemasukan/pengeluaran + pencarian + filter kategori spesifik)
+  // Transaksi akhir setelah filter pencarian, fokus (semua/keluar/masuk), dan kategori
   const difilter = useMemo(() => {
     const kata = cari.trim().toLowerCase();
     return transaksiRentang.filter((t) => {
       if (fokus !== 'semua' && t.jenis !== fokus) return false;
-      if (kategoriFilter && (t.kategori || 'Tanpa Kategori') !== kategoriFilter) return false;
+      if (kategoriTerpilih && (t.kategori || 'Tanpa Kategori') !== kategoriTerpilih) return false;
       if (!kata) return true;
       return (
         t.keterangan.toLowerCase().includes(kata) ||
@@ -149,453 +191,508 @@ export function RiwayatPage() {
         String(t.nominal).includes(kata)
       );
     });
-  }, [transaksiRentang, fokus, kategoriFilter, cari]);
+  }, [transaksiRentang, fokus, kategoriTerpilih, cari]);
 
-  // Handler gestur swipe geser horizontal
-  function handleTouchStart(e: React.TouchEvent) {
-    touchStartRef.current = {
-      x: e.touches[0].clientX,
-      y: e.touches[0].clientY,
-    };
-  }
-
-  function handleTouchEnd(e: React.TouchEvent) {
-    if (!touchStartRef.current) return;
-    const dx = e.changedTouches[0].clientX - touchStartRef.current.x;
-    const dy = e.changedTouches[0].clientY - touchStartRef.current.y;
-    touchStartRef.current = null;
-
-    // Pastikan gestur adalah horizontal dan melebihi batas sensitivitas (45px)
-    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-      if (dx > 0) {
-        // Geser ke kanan: jika sedang di 'semua' atau 'masuk', fokuskan ke 'keluar' (pengeluaran)
-        if (fokus === 'semua') setFokus('keluar');
-        else if (fokus === 'masuk') setFokus('semua');
-        else if (fokus === 'keluar') setFokus('masuk');
+  // Kelompokkan per hari untuk daftar transaksi
+  const grupHari = useMemo(() => {
+    const hasil: { label: string; items: Transaksi[]; net: number }[] = [];
+    for (const t of difilter) {
+      const label = labelHariRelatif(t.waktu, sekarang);
+      const nilai = t.jenis === 'masuk' ? t.nominal : -t.nominal;
+      const terakhir = hasil[hasil.length - 1];
+      if (terakhir && terakhir.label === label) {
+        terakhir.items.push(t);
+        terakhir.net += nilai;
       } else {
-        // Geser ke kiri: pindah mode
-        if (fokus === 'semua') setFokus('keluar');
-        else if (fokus === 'keluar') setFokus('masuk');
-        else if (fokus === 'masuk') setFokus('semua');
+        hasil.push({ label, items: [t], net: nilai });
       }
     }
-  }
+    return hasil;
+  }, [difilter, sekarang]);
 
-  const labelPeriode = FILTER.find((f) => f.id === filter)?.label ?? 'Periode Ini';
-  const inputTanggal =
-    'min-h-[2.75rem] flex-1 rounded-xl border border-line bg-card px-3 text-base text-ink focus:border-brand-deep focus:outline-none';
+  const labelPeriode = useMemo(() => {
+    switch (periode) {
+      case 'hari-ini':
+        return 'Hari Ini';
+      case 'kemarin':
+        return 'Kemarin';
+      case 'minggu-ini':
+        return 'Minggu Ini';
+      case 'bulan-ini':
+        return 'Bulan Ini';
+      case 'kustom':
+        return 'Rentang Kustom';
+    }
+  }, [periode]);
 
   return (
-    <>
-      <PageHeader title="Riwayat" />
-
+    <div className="relative min-h-dvh bg-[#120811] pb-28 text-white">
+      {/* Efek kilau latar belakang burgundy mewah seperti di contoh.webp */}
       <div
-        className="mx-auto w-full max-w-md px-4 py-4"
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-      >
-        {/* Kolom Pencarian */}
-        <label className="relative mb-3 block">
-          <span className="sr-only">Cari transaksi</span>
+        className="pointer-events-none absolute -top-16 -right-16 h-80 w-80 rounded-full bg-[#821842]/30 blur-3xl"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute top-72 -left-20 h-72 w-72 rounded-full bg-[#591132]/25 blur-3xl"
+        aria-hidden="true"
+      />
+
+      <div className="mx-auto w-full max-w-md px-4 pt-safe">
+        {/* 1. Header (Riwayat & Tombol Filter) */}
+        <header className="flex items-center justify-between pb-3 pt-4">
+          <div>
+            <h1 className="font-display text-2xl font-bold tracking-tight text-white">
+              Riwayat
+            </h1>
+            <p className="mt-0.5 text-xs text-[#c49baa]">
+              Kelola dan pantau semua transaksi kamu
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setPanelFilterBuka((v) => !v)}
+            aria-label="Filter kategori dan rentang"
+            className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl border border-[#3e1d34] bg-[#220f1c] text-[#d4a5b8] shadow-sm transition-colors hover:bg-[#2e1426] hover:text-white"
+          >
+            <Filter size={18} aria-hidden="true" />
+          </button>
+        </header>
+
+        {/* 2. Kolom Pencarian */}
+        <div className="relative mt-2">
           <Search
             size={18}
+            className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8f6477]"
             aria-hidden="true"
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-soft"
           />
           <input
+            type="text"
             value={cari}
             onChange={(e) => setCari(e.target.value)}
-            placeholder="Cari keterangan, kategori, atau nominal"
-            className="min-h-[2.75rem] w-full rounded-xl border border-line bg-card pl-10 pr-3 text-base text-ink placeholder:text-ink-soft/70 focus:border-brand-deep focus:outline-none"
+            placeholder="Cari keterangan, kategori, atau nominal..."
+            className="w-full rounded-2xl border border-[#341629] bg-[#1d0c18] py-2.5 pl-10 pr-4 text-xs text-white placeholder:text-[#8f6477] focus:border-[#d0346d] focus:outline-none focus:ring-2 focus:ring-[#d0346d]/25 transition-all"
           />
-        </label>
+          {cari && (
+            <button
+              type="button"
+              onClick={() => setCari('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8f6477] hover:text-white"
+            >
+              <X size={14} />
+            </button>
+          )}
+        </div>
 
-        {/* Pilihan Periode (Hari ini, Kemarin, Minggu ini, dst) */}
-        <div className="-mx-4 mb-3 flex gap-2 overflow-x-auto px-4 pb-1 no-scrollbar">
-          {FILTER.map((f) => {
-            const aktif = filter === f.id;
+        {/* 3. Baris Tombol Filter Waktu (Pills Horizontal) */}
+        <div className="no-scrollbar -mx-4 mt-3 flex items-center gap-2 overflow-x-auto px-4 pb-1">
+          {DAFTAR_PERIODE.map((item) => {
+            const aktif = periode === item.id;
             return (
               <button
-                key={f.id}
+                key={item.id}
                 type="button"
-                aria-pressed={aktif}
-                onClick={() => {
-                  setFilter(f.id);
-                  setKategoriFilter(null);
-                }}
+                onClick={() => setPeriode(item.id)}
                 className={cn(
-                  'min-h-[2.5rem] shrink-0 rounded-full px-4 text-sm font-semibold transition-colors',
-                  aktif ? 'bg-brand-deep text-on-brand shadow-sm' : 'bg-softer text-ink',
+                  'flex min-h-[2.25rem] shrink-0 items-center gap-1.5 rounded-full px-4 text-xs font-semibold transition-all',
+                  aktif
+                    ? 'bg-[#d0346d] text-white shadow-md shadow-[#d0346d]/30'
+                    : 'border border-[#341629] bg-[#1d0c18] text-[#c49baa] hover:bg-[#281122] hover:text-white',
                 )}
               >
-                {f.label}
+                {item.denganIkon && <Calendar size={13} aria-hidden="true" />}
+                <span>{item.label}</span>
               </button>
             );
           })}
         </div>
 
-        {/* Filter Rentang Tanggal Khusus */}
-        {filter === 'rentang' && (
-          <div className="mb-4 flex items-center gap-2">
-            <input
-              type="date"
-              aria-label="Dari tanggal"
-              value={dari}
-              onChange={(e) => setDari(e.target.value)}
-              className={inputTanggal}
-            />
-            <span className="text-sm text-ink-soft">sampai</span>
-            <input
-              type="date"
-              aria-label="Sampai tanggal"
-              value={sampai}
-              onChange={(e) => setSampai(e.target.value)}
-              className={inputTanggal}
-            />
+        {/* Input Tanggal Kustom (Jika 'Kustom' dipilih) */}
+        {periode === 'kustom' && (
+          <div className="mt-2.5 grid grid-cols-2 gap-2 rounded-2xl border border-[#341629] bg-[#1d0c18] p-3 text-xs">
+            <div>
+              <label className="mb-1 block text-[11px] text-[#8f6477]">Dari Tanggal</label>
+              <input
+                type="date"
+                value={dari}
+                onChange={(e) => setDari(e.target.value)}
+                className="w-full rounded-xl border border-[#341629] bg-[#140812] px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[#d0346d]"
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-[11px] text-[#8f6477]">Sampai Tanggal</label>
+              <input
+                type="date"
+                value={sampai}
+                onChange={(e) => setSampai(e.target.value)}
+                className="w-full rounded-xl border border-[#341629] bg-[#140812] px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[#d0346d]"
+              />
+            </div>
           </div>
         )}
 
-        {/* Carousel Kartu Fokus (Bisa digeser horizontal ke kanan untuk fokus Pengeluaran) */}
-        <div className="-mx-4 mb-3 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 no-scrollbar">
-          {/* Kartu 1: Ringkasan Saldo (Semua) */}
-          <div
-            onClick={() => {
-              setFokus('semua');
-              setKategoriFilter(null);
-            }}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => e.key === 'Enter' && setFokus('semua')}
-            className={cn(
-              'w-[86%] shrink-0 snap-start cursor-pointer rounded-3xl p-4 transition-all',
-              fokus === 'semua'
-                ? 'grad-brand text-white shadow-lg ring-2 ring-white/60'
-                : 'bg-card text-ink shadow-card hover:bg-softer/40',
-            )}
+        {/* 4. Kartu Unggulan Ringkasan (Featured Summary Card) */}
+        <div className="relative mt-3.5 overflow-hidden rounded-3xl border border-[#8a224d]/40 bg-gradient-to-br from-[#7a1a44] via-[#541230] to-[#33081c] p-5 text-white shadow-xl">
+          {/* Garis-garis gelombang halus seperti di contoh.webp */}
+          <svg
+            className="pointer-events-none absolute inset-0 h-full w-full opacity-20"
+            preserveAspectRatio="none"
+            viewBox="0 0 400 200"
+            aria-hidden="true"
           >
-            <div className="flex items-center justify-between">
-              <span className={cn('text-xs font-semibold uppercase tracking-wider', fokus === 'semua' ? 'text-white/85' : 'text-ink-soft')}>
-                Ringkasan {labelPeriode}
-              </span>
-              <span className={cn('inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold', fokus === 'semua' ? 'bg-white/20 text-white' : 'bg-softer text-ink-soft')}>
-                <Wallet size={12} aria-hidden="true" />
-                Semua
-              </span>
-            </div>
-            <p className={cn('mt-2 font-display text-2xl font-bold tabular-nums', fokus === 'semua' ? 'text-white' : 'text-ink')}>
-              {formatRupiah(total.saldo)}
-            </p>
-            <div className="mt-3 flex items-center justify-between border-t border-white/20 pt-2 text-xs">
-              <span className={fokus === 'semua' ? 'text-white/90' : 'text-income-ink'}>
-                Masuk: <strong>{formatRupiah(total.masuk)}</strong>
-              </span>
-              <span className={fokus === 'semua' ? 'text-white/90' : 'text-expense-ink'}>
-                Keluar: <strong>{formatRupiah(total.keluar)}</strong>
-              </span>
-            </div>
-            <p className={cn('mt-2 flex items-center gap-1 text-[11px] font-medium', fokus === 'semua' ? 'text-white/80' : 'text-brand-deep')}>
-              <span>Geser ke kanan untuk Fokus Pengeluaran</span>
-              <ArrowRight size={12} aria-hidden="true" />
-            </p>
-          </div>
+            <path d="M-40,160 Q120,60 260,130 T520,30" fill="none" stroke="white" strokeWidth="28" />
+            <path d="M-40,110 Q140,20 300,90 T520,10" fill="none" stroke="white" strokeWidth="18" />
+          </svg>
 
-          {/* Kartu 2: FOKUS PENGELUARAN */}
-          <div
-            onClick={() => {
-              setFokus('keluar');
-              setKategoriFilter(null);
-            }}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
-                e.preventDefault();
-                setFokus('keluar');
-                setKategoriFilter(null);
-              }
-            }}
-            className={cn(
-              'w-[86%] shrink-0 snap-start cursor-pointer rounded-3xl p-4 transition-all',
-              fokus === 'keluar'
-                ? 'bg-gradient-to-br from-[#c42b30] to-[#8f1d22] text-white shadow-lg ring-2 ring-white/60'
-                : 'bg-card text-ink shadow-card hover:bg-softer/40',
-            )}
-          >
-            <div className="flex items-center justify-between">
-              <span className={cn('text-xs font-semibold uppercase tracking-wider', fokus === 'keluar' ? 'text-white/85' : 'text-expense-ink')}>
-                Fokus Pengeluaran · {labelPeriode}
-              </span>
-              <span className={cn('inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold', fokus === 'keluar' ? 'bg-white text-[#c42b30]' : 'bg-rose-100 text-expense-ink')}>
-                <ArrowDownRight size={13} aria-hidden="true" />
-                {total.countKeluar} catatan
-              </span>
+          {/* Baris Atas Kartu */}
+          <div className="relative z-10 flex items-center justify-between">
+            <div className="flex items-center gap-1.5 text-xs font-medium text-pink-100">
+              <Calendar size={14} aria-hidden="true" />
+              <span>Ringkasan {labelPeriode}</span>
             </div>
-            <p className={cn('mt-2 font-display text-2xl font-bold tabular-nums', fokus === 'keluar' ? 'text-white' : 'text-expense-ink')}>
-              {formatRupiah(total.keluar)}
-            </p>
-            <div className="mt-3 flex items-center justify-between border-t border-white/20 pt-2 text-xs">
-              <span className={fokus === 'keluar' ? 'text-white/90' : 'text-ink-soft'}>
-                {total.countKeluar > 0
-                  ? `${Object.keys(total.rincianKeluarKategori).length} kategori pengeluaran`
-                  : 'Belum ada pengeluaran'}
-              </span>
-              <span className={fokus === 'keluar' ? 'font-bold text-white' : 'font-semibold text-brand-deep'}>
-                {fokus === 'keluar' ? '✓ Mode Aktif' : 'Ketuk untuk fokus'}
-              </span>
-            </div>
-            {total.countKeluar > 0 && (
-              <div className="mt-2.5 flex flex-wrap gap-1.5">
-                {Object.entries(total.rincianKeluarKategori)
-                  .slice(0, 3)
-                  .map(([kat, nom]) => (
-                    <span
-                      key={kat}
-                      className={cn(
-                        'rounded-lg px-2 py-0.5 text-[10px] font-medium',
-                        fokus === 'keluar' ? 'bg-white/20 text-white' : 'bg-softer text-ink',
-                      )}
-                    >
-                      {kat}: {formatRupiah(nom)}
-                    </span>
-                  ))}
-              </div>
-            )}
-          </div>
 
-          {/* Kartu 3: FOKUS PEMASUKAN */}
-          <div
-            onClick={() => {
-              setFokus('masuk');
-              setKategoriFilter(null);
-            }}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => e.key === 'Enter' && setFokus('masuk')}
-            className={cn(
-              'w-[86%] shrink-0 snap-start cursor-pointer rounded-3xl p-4 transition-all',
-              fokus === 'masuk'
-                ? 'bg-gradient-to-br from-[#1b8a52] to-[#125c37] text-white shadow-lg ring-2 ring-white/60'
-                : 'bg-card text-ink shadow-card hover:bg-softer/40',
-            )}
-          >
-            <div className="flex items-center justify-between">
-              <span className={cn('text-xs font-semibold uppercase tracking-wider', fokus === 'masuk' ? 'text-white/85' : 'text-income-ink')}>
-                Fokus Pemasukan · {labelPeriode}
-              </span>
-              <span className={cn('inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold', fokus === 'masuk' ? 'bg-white text-[#1b8a52]' : 'bg-emerald-100 text-income-ink')}>
-                <ArrowUpRight size={13} aria-hidden="true" />
-                {total.countMasuk} catatan
-              </span>
-            </div>
-            <p className={cn('mt-2 font-display text-2xl font-bold tabular-nums', fokus === 'masuk' ? 'text-white' : 'text-income-ink')}>
-              {formatRupiah(total.masuk)}
-            </p>
-            <div className="mt-3 flex items-center justify-between border-t border-white/20 pt-2 text-xs">
-              <span className={fokus === 'masuk' ? 'text-white/90' : 'text-ink-soft'}>
-                {total.countMasuk} penjualan berhasil dicatat
-              </span>
-              <span className={fokus === 'masuk' ? 'font-bold text-white' : 'font-semibold text-income-ink'}>
-                {fokus === 'masuk' ? '✓ Mode Aktif' : 'Ketuk untuk fokus'}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Tombol Tab Pilihan Cepat (Semua / Pengeluaran / Pemasukan) */}
-        <div className="mb-4 flex rounded-2xl bg-softer p-1 text-sm font-semibold">
-          <button
-            type="button"
-            onClick={() => {
-              setFokus('semua');
-              setKategoriFilter(null);
-            }}
-            className={cn(
-              'flex-1 rounded-xl py-2 text-center transition-all',
-              fokus === 'semua'
-                ? 'bg-card text-ink shadow-sm'
-                : 'text-ink-soft hover:text-ink',
-            )}
-          >
-            Semua ({total.countTotal})
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setFokus('keluar');
-              setKategoriFilter(null);
-            }}
-            className={cn(
-              'flex-1 rounded-xl py-2 text-center transition-all',
-              fokus === 'keluar'
-                ? 'bg-card text-expense-ink shadow-sm ring-1 ring-expense-ink/20'
-                : 'text-ink-soft hover:text-expense-ink',
-            )}
-          >
-            Pengeluaran ({total.countKeluar})
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setFokus('masuk');
-              setKategoriFilter(null);
-            }}
-            className={cn(
-              'flex-1 rounded-xl py-2 text-center transition-all',
-              fokus === 'masuk'
-                ? 'bg-card text-income-ink shadow-sm ring-1 ring-income-ink/20'
-                : 'text-ink-soft hover:text-income-ink',
-            )}
-          >
-            Pemasukan ({total.countMasuk})
-          </button>
-        </div>
-
-        {/* Ringkasan Bar Cepat (Bisa diklik untuk ganti fokus) */}
-        <div className="mb-4">
-          <RingkasanBar
-            masuk={total.masuk}
-            keluar={total.keluar}
-            saldo={total.saldo}
-            fokus={fokus}
-            onPilihFokus={(f) => {
-              setFokus(f);
-              setKategoriFilter(null);
-            }}
-          />
-        </div>
-
-        {/* Banner Mode Fokus Pengeluaran */}
-        {fokus === 'keluar' && (
-          <div className="mb-4 rounded-2xl border border-rose-200 bg-rose-50/80 p-3.5 dark:border-rose-900/40 dark:bg-rose-950/20">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-expense-ink">
-                <ArrowDownRight size={18} aria-hidden="true" />
-                <span className="text-sm font-bold">Sedang Fokus Pengeluaran</span>
-              </div>
+            {/* Dropdown Kategori Pil "Semua ▾" */}
+            <div className="relative">
               <button
                 type="button"
-                onClick={() => {
-                  setFokus('semua');
-                  setKategoriFilter(null);
-                }}
-                className="text-xs font-semibold text-ink-soft underline hover:text-ink"
+                onClick={() => setMenuKategoriBuka((v) => !v)}
+                className="flex items-center gap-1 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/20"
               >
-                Tampilkan Semua
+                <span>{kategoriTerpilih || 'Semua'}</span>
+                <ChevronDown size={13} aria-hidden="true" />
               </button>
+
+              {menuKategoriBuka && (
+                <div className="absolute right-0 top-full z-30 mt-1 max-h-48 w-36 overflow-y-auto rounded-xl border border-white/20 bg-[#250d1d] p-1 shadow-2xl backdrop-blur-lg">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setKategoriTerpilih(null);
+                      setMenuKategoriBuka(false);
+                    }}
+                    className={cn(
+                      'w-full rounded-lg px-2.5 py-1.5 text-left text-xs transition-colors',
+                      kategoriTerpilih === null ? 'bg-[#d0346d] text-white font-semibold' : 'text-pink-100 hover:bg-white/10',
+                    )}
+                  >
+                    Semua
+                  </button>
+                  {kategori.map((k) => (
+                    <button
+                      key={k.id}
+                      type="button"
+                      onClick={() => {
+                        setKategoriTerpilih(k.nama);
+                        setMenuKategoriBuka(false);
+                      }}
+                      className={cn(
+                        'w-full rounded-lg px-2.5 py-1.5 text-left text-xs transition-colors',
+                        kategoriTerpilih === k.nama ? 'bg-[#d0346d] text-white font-semibold' : 'text-pink-100 hover:bg-white/10',
+                      )}
+                    >
+                      {k.nama}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Nominal Saldo Utama Besar */}
+          <div className="relative z-10 my-3 font-display text-3xl font-extrabold tracking-tight tabular-nums text-white">
+            {formatRupiah(total.saldo)}
+          </div>
+
+          {/* Baris Bawah: Pemasukan & Pengeluaran 2 Kolom */}
+          <div className="relative z-10 grid grid-cols-2 gap-3 border-t border-white/15 pt-3">
+            <div className="flex items-center gap-2.5">
+              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#10b981]/25 text-[#34d399]">
+                <ArrowDown size={16} strokeWidth={2.5} aria-hidden="true" />
+              </span>
+              <div className="min-w-0">
+                <p className="text-[11px] font-medium text-pink-100/70">Pemasukan</p>
+                <p className="truncate text-sm font-bold text-white tabular-nums">
+                  {formatRupiah(total.masuk)}
+                </p>
+              </div>
             </div>
 
-            {/* Filter Cepat Per Kategori Pengeluaran */}
-            {Object.keys(total.rincianKeluarKategori).length > 0 && (
-              <div className="mt-2.5 flex flex-wrap gap-1.5">
+            <div className="flex items-center gap-2.5 border-l border-white/15 pl-3">
+              <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#f43f5e]/25 text-[#fb7185]">
+                <ArrowUp size={16} strokeWidth={2.5} aria-hidden="true" />
+              </span>
+              <div className="min-w-0">
+                <p className="text-[11px] font-medium text-pink-100/70">Pengeluaran</p>
+                <p className="truncate text-sm font-bold text-white tabular-nums">
+                  {formatRupiah(total.keluar)}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 5. Tiga Kartu Statistik Mini (Masuk, Keluar, Saldo) */}
+        <div className="mt-3.5 grid grid-cols-3 gap-2.5">
+          {/* Card 1: Masuk */}
+          <button
+            type="button"
+            onClick={() => setFokus('masuk')}
+            className={cn(
+              'flex flex-col rounded-2xl border p-3 text-left transition-all',
+              fokus === 'masuk'
+                ? 'border-[#10b981]/50 bg-[#162920] shadow-sm'
+                : 'border-[#341629] bg-[#1d0c18] hover:bg-[#261020]',
+            )}
+          >
+            <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#10b981]/15 text-[#10b981]">
+              <Wallet size={15} aria-hidden="true" />
+            </span>
+            <span className="mt-2 text-[11px] font-medium text-[#c49baa]">Masuk</span>
+            <span className="mt-0.5 truncate text-xs font-bold tabular-nums text-[#34d399]">
+              {formatRupiah(total.masuk)}
+            </span>
+          </button>
+
+          {/* Card 2: Keluar */}
+          <button
+            type="button"
+            onClick={() => setFokus('keluar')}
+            className={cn(
+              'flex flex-col rounded-2xl border p-3 text-left transition-all',
+              fokus === 'keluar'
+                ? 'border-[#f43f5e]/50 bg-[#2d121c] shadow-sm'
+                : 'border-[#341629] bg-[#1d0c18] hover:bg-[#261020]',
+            )}
+          >
+            <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#f43f5e]/15 text-[#f43f5e]">
+              <Upload size={15} aria-hidden="true" />
+            </span>
+            <span className="mt-2 text-[11px] font-medium text-[#c49baa]">Keluar</span>
+            <span className="mt-0.5 truncate text-xs font-bold tabular-nums text-[#fb7185]">
+              {formatRupiah(total.keluar)}
+            </span>
+          </button>
+
+          {/* Card 3: Saldo */}
+          <button
+            type="button"
+            onClick={() => setFokus('semua')}
+            className={cn(
+              'flex flex-col rounded-2xl border p-3 text-left transition-all',
+              fokus === 'semua'
+                ? 'border-[#d0346d]/50 bg-[#2a101f] shadow-sm'
+                : 'border-[#341629] bg-[#1d0c18] hover:bg-[#261020]',
+            )}
+          >
+            <span className="grid h-7 w-7 place-items-center rounded-lg bg-[#d0346d]/15 text-[#d0346d]">
+              <Layers size={15} aria-hidden="true" />
+            </span>
+            <span className="mt-2 text-[11px] font-medium text-[#c49baa]">Saldo</span>
+            <span className="mt-0.5 truncate text-xs font-bold tabular-nums text-white">
+              {formatRupiah(total.saldo)}
+            </span>
+          </button>
+        </div>
+
+        {/* 6. Tiga Tab Segmentasi Cepat */}
+        <div className="mt-3.5 grid grid-cols-3 gap-1 rounded-2xl border border-[#341629] bg-[#1d0c18] p-1 text-xs font-semibold">
+          <button
+            type="button"
+            onClick={() => {
+              setFokus('semua');
+              setKategoriTerpilih(null);
+            }}
+            className={cn(
+              'flex min-h-[2.5rem] items-center justify-center gap-1.5 rounded-xl transition-all',
+              fokus === 'semua'
+                ? 'bg-white font-bold text-[#190814] shadow-sm'
+                : 'text-[#c49baa] hover:text-white',
+            )}
+          >
+            <List size={14} aria-hidden="true" />
+            <span>Semua ({total.countTotal})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setFokus('keluar');
+              setKategoriTerpilih(null);
+            }}
+            className={cn(
+              'flex min-h-[2.5rem] items-center justify-center gap-1.5 rounded-xl transition-all',
+              fokus === 'keluar'
+                ? 'bg-white font-bold text-[#190814] shadow-sm'
+                : 'text-[#c49baa] hover:text-[#fb7185]',
+            )}
+          >
+            <ArrowUp size={14} aria-hidden="true" />
+            <span>Pengeluaran ({total.countKeluar})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setFokus('masuk');
+              setKategoriTerpilih(null);
+            }}
+            className={cn(
+              'flex min-h-[2.5rem] items-center justify-center gap-1.5 rounded-xl transition-all',
+              fokus === 'masuk'
+                ? 'bg-white font-bold text-[#190814] shadow-sm'
+                : 'text-[#c49baa] hover:text-[#34d399]',
+            )}
+          >
+            <ArrowDown size={14} aria-hidden="true" />
+            <span>Pemasukan ({total.countMasuk})</span>
+          </button>
+        </div>
+
+        {/* Panel Filter Kategori Tambahan (Bisa dibuka lewat tombol filter atas) */}
+        {panelFilterBuka && (
+          <div className="mt-3 rounded-2xl border border-[#3e1d34] bg-[#1d0c18] p-3 text-xs">
+            <div className="mb-2 flex items-center justify-between text-[#c49baa]">
+              <span className="font-semibold">Filter Berdasarkan Kategori</span>
+              {kategoriTerpilih && (
                 <button
                   type="button"
-                  onClick={() => setKategoriFilter(null)}
-                  className={cn(
-                    'min-h-[2.25rem] rounded-full px-3 py-1.5 text-xs font-semibold transition-colors',
-                    kategoriFilter === null
-                      ? 'bg-expense-ink text-white'
-                      : 'bg-white text-ink shadow-xs dark:bg-card',
-                  )}
+                  onClick={() => setKategoriTerpilih(null)}
+                  className="text-xs text-[#d0346d] underline"
                 >
-                  Semua Kategori
+                  Reset
                 </button>
-                {Object.entries(total.rincianKeluarKategori).map(([kat, nom]) => {
-                  const aktif = kategoriFilter === kat;
-                  return (
-                    <button
-                      key={kat}
-                      type="button"
-                      onClick={() => setKategoriFilter(aktif ? null : kat)}
-                      className={cn(
-                        'flex min-h-[2.25rem] items-center gap-1 rounded-full px-3 py-1.5 text-xs font-medium transition-colors',
-                        aktif
-                          ? 'bg-expense-ink text-white font-semibold'
-                          : 'bg-white text-ink shadow-xs dark:bg-card',
-                      )}
-                    >
-                      <span>{kat}</span>
-                      <span className="opacity-75">({formatRupiah(nom)})</span>
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Banner Mode Fokus Pemasukan */}
-        {fokus === 'masuk' && (
-          <div className="mb-4 flex items-center justify-between rounded-2xl border border-emerald-200 bg-emerald-50/80 p-3 dark:border-emerald-900/40 dark:bg-emerald-950/20">
-            <div className="flex items-center gap-2 text-income-ink">
-              <ArrowUpRight size={18} aria-hidden="true" />
-              <span className="text-sm font-bold">Sedang Fokus Pemasukan</span>
+              )}
             </div>
-            <button
-              type="button"
-              onClick={() => {
-                setFokus('semua');
-                setKategoriFilter(null);
-              }}
-              className="text-xs font-semibold text-ink-soft underline hover:text-ink"
-            >
-              Tampilkan Semua
-            </button>
-          </div>
-        )}
-
-        {/* Daftar Transaksi */}
-        {transaksi.length === 0 ? (
-          <EmptyState
-            illustration={<ReceiptIllustration className="h-full w-full" />}
-            title="Riwayat masih kosong"
-            hint="Semua transaksi yang kamu catat tersimpan di sini dan bisa difilter per hari, minggu, atau bulan."
-          />
-        ) : difilter.length === 0 ? (
-          <div className="rounded-3xl bg-card p-6 text-center shadow-card">
-            <div className="mx-auto mb-3 grid h-12 w-12 place-items-center rounded-full bg-softer text-brand-deep">
-              <Receipt size={24} aria-hidden="true" />
-            </div>
-            <h3 className="font-display text-base font-semibold text-ink">
-              {fokus === 'keluar'
-                ? `Belum ada pengeluaran di ${labelPeriode}`
-                : fokus === 'masuk'
-                  ? `Belum ada pemasukan di ${labelPeriode}`
-                  : 'Tidak ada transaksi yang cocok'}
-            </h3>
-            <p className="mt-1 text-xs text-ink-soft">
-              {fokus === 'keluar'
-                ? 'Tidak ada catatan belanja/pengeluaran untuk periode yang dipilih.'
-                : 'Coba ubah filter periode atau kata pencarian.'}
-            </p>
-            {fokus === 'keluar' && (
+            <div className="flex flex-wrap gap-1.5">
               <button
                 type="button"
-                onClick={() => sheet.tambah('keluar')}
-                className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-brand-deep px-4 py-2 text-sm font-semibold text-white shadow-sm"
+                onClick={() => setKategoriTerpilih(null)}
+                className={cn(
+                  'min-h-[2rem] rounded-full px-3 py-1 font-medium transition-colors',
+                  kategoriTerpilih === null
+                    ? 'bg-[#d0346d] text-white font-semibold'
+                    : 'border border-[#341629] bg-[#140812] text-[#c49baa]',
+                )}
+              >
+                Semua Kategori
+              </button>
+              {kategori.map((k) => {
+                const aktif = kategoriTerpilih === k.nama;
+                return (
+                  <button
+                    key={k.id}
+                    type="button"
+                    onClick={() => setKategoriTerpilih(aktif ? null : k.nama)}
+                    className={cn(
+                      'min-h-[2rem] rounded-full px-3 py-1 font-medium transition-colors',
+                      aktif
+                        ? 'bg-[#d0346d] text-white font-semibold'
+                        : 'border border-[#341629] bg-[#140812] text-[#c49baa]',
+                    )}
+                  >
+                    {k.nama}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* 7. Konten: Status Kosong ATAU Daftar Transaksi */}
+        <div className="mt-6">
+          {difilter.length === 0 ? (
+            /* Tampilan Kosong Persis contoh.webp */
+            <div className="flex flex-col items-center justify-center py-6 text-center">
+              <IlustrasiResiStruk />
+              <h2 className="mt-4 font-display text-lg font-bold text-white">
+                Riwayat masih kosong
+              </h2>
+              <p className="mt-1.5 max-w-xs text-xs leading-relaxed text-[#a87d90]">
+                Semua transaksi yang kamu catat tersimpan di sini dan bisa difilter per hari, minggu, atau bulan.
+              </p>
+              <button
+                type="button"
+                onClick={() => sheet.tambah()}
+                className="mt-4 flex min-h-[2.75rem] items-center gap-1.5 rounded-full bg-[#d0346d] px-6 text-xs font-semibold text-white shadow-lg shadow-[#d0346d]/30 transition-transform active:scale-95 hover:bg-[#b5285b]"
               >
                 <Plus size={16} aria-hidden="true" />
-                Catat Pengeluaran
+                <span>Catat Transaksi</span>
               </button>
-            )}
-          </div>
-        ) : (
-          <DayGroupedList
-            transaksi={difilter}
-            sekarang={sekarang}
-            onBuka={sheet.edit}
-            onHapus={(t: Transaksi) => void hapus(t)}
-          />
-        )}
+            </div>
+          ) : (
+            /* Daftar Transaksi jika ada data */
+            <div className="space-y-4">
+              {grupHari.map((grup) => (
+                <section key={grup.label} aria-label={grup.label}>
+                  <div className="mb-2 flex items-baseline justify-between px-1">
+                    <h3 className="text-xs font-semibold text-[#c49baa]">{grup.label}</h3>
+                    <span className="text-xs font-medium tabular-nums text-[#8f6477]">
+                      {formatRupiah(grup.net)}
+                    </span>
+                  </div>
+                  <div className="space-y-2">
+                    {grup.items.map((t) => {
+                      const masuk = t.jenis === 'masuk';
+                      const judul = t.keterangan.trim() || (masuk ? 'Pemasukan' : 'Pengeluaran');
+                      return (
+                        <SwipeRow
+                          key={t.id}
+                          onBuka={() => sheet.edit(t)}
+                          onHapus={() => void hapus(t)}
+                          labelHapus={`Hapus ${judul}`}
+                        >
+                          <div className="flex items-center gap-3 rounded-2xl border border-[#341629] bg-[#1d0c18] px-4 py-3 transition-colors hover:bg-[#251020]">
+                            <div className="min-w-0 flex-1">
+                              <p className="truncate text-sm font-semibold text-white">{judul}</p>
+                              <p className="mt-0.5 flex items-center gap-1.5 text-xs text-[#8f6477]">
+                                <span className="tabular-nums">{formatJam(t.waktu)}</span>
+                                {t.kategori && (
+                                  <>
+                                    <span aria-hidden="true">·</span>
+                                    <span className="truncate text-[#c49baa]">{t.kategori}</span>
+                                  </>
+                                )}
+                              </p>
+                            </div>
+                            <span
+                              className={cn(
+                                'shrink-0 text-sm font-bold tabular-nums',
+                                masuk ? 'text-[#34d399]' : 'text-[#fb7185]',
+                              )}
+                            >
+                              {masuk ? '+' : '-'}
+                              {formatRupiah(t.nominal)}
+                            </span>
+                          </div>
+                        </SwipeRow>
+                      );
+                    })}
+                  </div>
+                </section>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
-      <Fab onClick={() => sheet.tambah(fokus === 'keluar' ? 'keluar' : 'masuk')} label="Catat transaksi" />
+      {/* 8. Tombol Melayang Tambah Transaksi (FAB) di kanan bawah persis contoh.webp */}
+      <button
+        type="button"
+        onClick={() => sheet.tambah()}
+        aria-label="Catat transaksi baru"
+        className="fixed bottom-[calc(5rem_+_env(safe-area-inset-bottom))] right-4 z-30 grid h-14 w-14 place-items-center rounded-full bg-[#d0346d] text-white shadow-xl shadow-[#d0346d]/40 transition-transform active:scale-95 hover:bg-[#b5285b]"
+      >
+        <Plus size={26} strokeWidth={2.5} aria-hidden="true" />
+      </button>
+
+      {/* Lembar Dialog Form Transaksi */}
       <TransaksiSheet
         buka={sheet.buka}
         transaksi={sheet.transaksi}
-        jenisDefault={sheet.jenisDefault ?? (fokus === 'keluar' ? 'keluar' : 'masuk')}
+        jenisDefault={sheet.jenisDefault}
         kategori={kategori}
         onTutup={sheet.tutup}
       />
-    </>
+    </div>
   );
 }
