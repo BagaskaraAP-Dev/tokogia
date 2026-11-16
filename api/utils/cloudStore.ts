@@ -1,5 +1,5 @@
 import { put, list } from '@vercel/blob';
-import { getSupabaseServer } from './supabaseServer';
+import { getSupabaseServer } from './supabaseServer.js';
 
 const NAMA_FILE_TRANSAKSI = 'data/transaksi.json';
 

@@ -3,8 +3,8 @@ import {
   buatTemplateEmailRekap,
   buatTemplateEmailTransaksi,
   buatTemplateEmailUjiCoba,
-} from './utils/emailTemplate';
-import { EMAIL_TUJUAN_DEFAULT, kirimEmail } from './utils/mailer';
+} from './utils/emailTemplate.js';
+import { EMAIL_TUJUAN_DEFAULT, kirimEmail } from './utils/mailer.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Atur CORS agar bisa diakses dari browser frontend & PWA

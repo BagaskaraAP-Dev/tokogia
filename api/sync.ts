@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { getSupabaseServer } from './utils/supabaseServer';
-import { ambilDariVercelBlob, simpanKeVercelBlob } from './utils/cloudStore';
+import { getSupabaseServer } from './utils/supabaseServer.js';
+import { ambilDariVercelBlob, simpanKeVercelBlob } from './utils/cloudStore.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*');

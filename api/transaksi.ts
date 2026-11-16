@@ -1,8 +1,8 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { getSupabaseServer } from './utils/supabaseServer';
-import { ambilDariVercelBlob, simpanKeVercelBlob, simpanTransaksiCloud } from './utils/cloudStore';
-import { buatTemplateEmailTransaksi } from './utils/emailTemplate';
-import { EMAIL_TUJUAN_DEFAULT, kirimEmail } from './utils/mailer';
+import { getSupabaseServer } from './utils/supabaseServer.js';
+import { ambilDariVercelBlob, simpanKeVercelBlob, simpanTransaksiCloud } from './utils/cloudStore.js';
+import { buatTemplateEmailTransaksi } from './utils/emailTemplate.js';
+import { EMAIL_TUJUAN_DEFAULT, kirimEmail } from './utils/mailer.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*');

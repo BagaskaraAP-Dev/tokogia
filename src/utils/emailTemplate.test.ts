@@ -4,8 +4,8 @@ import {
   buatTemplateEmailTransaksi,
   buatTemplateEmailUjiCoba,
   formatRupiah,
-} from '../../api/utils/emailTemplate';
-import { EMAIL_TUJUAN_DEFAULT } from '../../api/utils/mailer';
+} from '../../api/utils/emailTemplate.js';
+import { EMAIL_TUJUAN_DEFAULT } from '../../api/utils/mailer.js';
 
 describe('Sistem Template Email Laporan Gia\'s Patisserie', () => {
   it('harus memiliki email penerima default giacantik749@gmail.com', () => {
