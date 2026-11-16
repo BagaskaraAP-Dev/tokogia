@@ -307,7 +307,13 @@ export function RiwayatPage() {
             }}
             role="button"
             tabIndex={0}
-            onKeyDown={(e) => e.key === 'Enter' && setFokus('keluar')}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                e.preventDefault();
+                setFokus('keluar');
+                setKategoriFilter(null);
+              }
+            }}
             className={cn(
               'w-[86%] shrink-0 snap-start cursor-pointer rounded-3xl p-4 transition-all',
               fokus === 'keluar'
@@ -485,7 +491,7 @@ export function RiwayatPage() {
                   type="button"
                   onClick={() => setKategoriFilter(null)}
                   className={cn(
-                    'rounded-full px-2.5 py-1 text-xs font-semibold transition-colors',
+                    'min-h-[2.25rem] rounded-full px-3 py-1.5 text-xs font-semibold transition-colors',
                     kategoriFilter === null
                       ? 'bg-expense-ink text-white'
                       : 'bg-white text-ink shadow-xs dark:bg-card',
@@ -501,7 +507,7 @@ export function RiwayatPage() {
                       type="button"
                       onClick={() => setKategoriFilter(aktif ? null : kat)}
                       className={cn(
-                        'flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium transition-colors',
+                        'flex min-h-[2.25rem] items-center gap-1 rounded-full px-3 py-1.5 text-xs font-medium transition-colors',
                         aktif
                           ? 'bg-expense-ink text-white font-semibold'
                           : 'bg-white text-ink shadow-xs dark:bg-card',

@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { getSupabaseServer } from './utils/supabaseServer';
+import { ambilDariVercelBlob, simpanKeVercelBlob, simpanTransaksiCloud } from './utils/cloudStore';
 import { buatTemplateEmailTransaksi } from './utils/emailTemplate';
 import { EMAIL_TUJUAN_DEFAULT, kirimEmail } from './utils/mailer';
 
@@ -14,29 +15,36 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const supabase = getSupabaseServer();
 
-  // 1. GET: Ambil daftar transaksi dari database cloud
+  // 1. GET: Ambil daftar transaksi dari database cloud (Supabase atau Vercel Blob)
   if (req.method === 'GET') {
-    if (!supabase) {
-      return res.status(200).json({
-        success: true,
-        data: [],
-        online: false,
-        catatan: 'Database cloud belum terhubung. Konfigurasikan Supabase URL & Key di Pengaturan.',
-      });
+    if (supabase) {
+      try {
+        const { data, error } = await supabase
+          .from('transaksi')
+          .select('*')
+          .order('waktu', { ascending: false });
+
+        if (error) throw error;
+
+        return res.status(200).json({
+          success: true,
+          online: true,
+          provider: 'supabase',
+          data: data || [],
+        });
+      } catch (err: unknown) {
+        console.warn('Gagal ambil dari Supabase, coba fallback ke Blob:', err);
+      }
     }
 
+    // Fallback ke Vercel Blob
     try {
-      const { data, error } = await supabase
-        .from('transaksi')
-        .select('*')
-        .order('waktu', { ascending: false });
-
-      if (error) throw error;
-
+      const blobData = await ambilDariVercelBlob();
       return res.status(200).json({
         success: true,
         online: true,
-        data: data || [],
+        provider: 'vercel-blob',
+        data: blobData?.transaksi || [],
       });
     } catch (err: unknown) {
       const pesan = err instanceof Error ? err.message : 'Gagal mengambil data transaksi online';
@@ -54,31 +62,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return res.status(400).json({ error: 'Data transaksi tidak lengkap' });
       }
 
-      let cloudTersimpan = false;
+      // Simpan ke cloud (Supabase & Vercel Blob)
+      const hasilCloud = await simpanTransaksiCloud(transaksi);
 
-      // Simpan ke Supabase jika terhubung
-      if (supabase) {
-        const { error: dbError } = await supabase.from('transaksi').upsert(
-          {
-            id: transaksi.id,
-            jenis: transaksi.jenis,
-            nominal: transaksi.nominal,
-            keterangan: transaksi.keterangan || '',
-            kategori: transaksi.kategori || null,
-            waktu: transaksi.waktu,
-            dibuat: transaksi.dibuat || Date.now(),
-          },
-          { onConflict: 'id' },
-        );
-
-        if (dbError) {
-          console.error('Gagal simpan ke Supabase:', dbError);
-        } else {
-          cloudTersimpan = true;
-        }
-      }
-
-      // Kirim email laporan ke giacantik749@gmail.com
+      // Kirim email laporan rincian ke giacantik749@gmail.com
       let emailStatus = null;
       if (kirimNotif) {
         const template = buatTemplateEmailTransaksi({
@@ -97,7 +84,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({
         success: true,
         id: transaksi.id,
-        cloudTersimpan,
+        cloudTersimpan: hasilCloud.supabase || hasilCloud.blob,
+        provider: hasilCloud.supabase ? 'supabase' : hasilCloud.blob ? 'vercel-blob' : 'lokal',
         emailStatus,
       });
     } catch (err: unknown) {
@@ -113,18 +101,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'ID transaksi diperlukan' });
     }
 
-    if (!supabase) {
-      return res.status(200).json({ success: true, offline: true });
+    if (supabase) {
+      try {
+        await supabase.from('transaksi').delete().eq('id', id);
+      } catch (e) {
+        console.warn('Gagal hapus di Supabase:', e);
+      }
     }
 
     try {
-      const { error } = await supabase.from('transaksi').delete().eq('id', id);
-      if (error) throw error;
-      return res.status(200).json({ success: true, id });
-    } catch (err: unknown) {
-      const pesan = err instanceof Error ? err.message : 'Gagal menghapus transaksi dari cloud';
-      return res.status(500).json({ success: false, error: pesan });
+      const dataLama = await ambilDariVercelBlob();
+      if (dataLama && Array.isArray(dataLama.transaksi)) {
+        dataLama.transaksi = dataLama.transaksi.filter((t: any) => t.id !== id);
+        dataLama.terakhirDiubah = Date.now();
+        await simpanKeVercelBlob(dataLama);
+      }
+    } catch (e) {
+      console.warn('Gagal hapus di Vercel Blob:', e);
     }
+
+    return res.status(200).json({ success: true, id });
   }
 
   return res.status(405).json({ error: 'Metode tidak didukung' });

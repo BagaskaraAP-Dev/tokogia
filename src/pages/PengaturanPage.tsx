@@ -249,7 +249,7 @@ export function PengaturanPage() {
         <section>
           <div className="mb-2 flex items-center justify-between px-1">
             <h2 className="text-sm font-semibold text-ink-soft">Laporan Email Masuk</h2>
-            <span className="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-800">
+            <span className="inline-flex items-center rounded-full bg-income/15 px-2.5 py-0.5 text-xs font-semibold text-income-ink dark:bg-income/25 dark:text-income">
               Otomatis Aktif
             </span>
           </div>
@@ -307,8 +307,8 @@ export function PengaturanPage() {
             <span
               className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
                 isCloudAktif()
-                  ? 'bg-emerald-100 text-emerald-800'
-                  : 'bg-amber-100 text-amber-800'
+                  ? 'bg-income/15 text-income-ink dark:bg-income/25 dark:text-income'
+                  : 'bg-brand/15 text-brand-deep dark:bg-brand/25 dark:text-brand'
               }`}
             >
               {isCloudAktif() ? 'Tersambung ke Cloud' : 'Mode Lokal Saja'}
@@ -338,33 +338,35 @@ export function PengaturanPage() {
             {panelCloudTerbuka && (
               <div className="border-t border-line py-4 space-y-3">
                 <div className="rounded-2xl bg-softer p-3 text-xs text-ink-soft leading-relaxed">
-                  Data otomatis tersimpan di cloud Supabase sehingga kasir di toko kue dan pemilik di
+                  Data otomatis tersimpan di cloud sehingga kasir di toko kue dan pemilik di
                   rumah bisa melihat laporan keuangan yang sama secara real-time.
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-xs font-semibold text-ink-soft">
+                  <label htmlFor="cfg-supabase-url" className="mb-1 block text-xs font-semibold text-ink-soft">
                     Supabase Project URL
                   </label>
                   <input
+                    id="cfg-supabase-url"
                     type="url"
                     placeholder="https://xyzcompany.supabase.co"
                     value={inputUrl}
                     onChange={(e) => setInputUrl(e.target.value)}
-                    className="w-full rounded-xl border border-line bg-card px-3 py-2 text-xs text-ink placeholder:text-ink-soft/60 focus:border-brand-deep focus:outline-none"
+                    className="w-full rounded-xl border border-line bg-card px-3 py-2 text-xs text-ink placeholder:text-ink-soft/60 focus:border-brand-deep focus:outline-none focus:ring-2 focus:ring-brand-deep/20"
                   />
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-xs font-semibold text-ink-soft">
+                  <label htmlFor="cfg-supabase-key" className="mb-1 block text-xs font-semibold text-ink-soft">
                     Supabase Anon Public Key
                   </label>
                   <input
+                    id="cfg-supabase-key"
                     type="password"
                     placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
                     value={inputAnonKey}
                     onChange={(e) => setInputAnonKey(e.target.value)}
-                    className="w-full rounded-xl border border-line bg-card px-3 py-2 text-xs text-ink placeholder:text-ink-soft/60 focus:border-brand-deep focus:outline-none"
+                    className="w-full rounded-xl border border-line bg-card px-3 py-2 text-xs text-ink placeholder:text-ink-soft/60 focus:border-brand-deep focus:outline-none focus:ring-2 focus:ring-brand-deep/20"
                   />
                 </div>
 
